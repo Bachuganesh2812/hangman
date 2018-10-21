@@ -9,13 +9,24 @@ public class HangmanGame implements Serializable{
 	private SinglyLinkedList<Character> answerLetters = new SinglyLinkedList<Character>();
 	private SinglyLinkedList<Character> guessedLetters = new SinglyLinkedList<Character>();
 	private String answer;
+	private int mistakesLeft;
+	private boolean usedHint = false;
+	
 
 	public SinglyLinkedList<Character> getAnswerLetters() {
 		return answerLetters;
 	}
 
-	public void setAnswer(SinglyLinkedList<Character> answer) {
+	public void setAnswerLetters(SinglyLinkedList<Character> answer) {
 		this.answerLetters = answer;
+	}
+
+	public int getMistakesLeft() {
+		return mistakesLeft;
+	}
+
+	public void setMistakesLeft(int mistakesLeft) {
+		this.mistakesLeft = mistakesLeft;
 	}
 
 	public SinglyLinkedList<Character> getGuessedLetters() {
@@ -32,6 +43,7 @@ public class HangmanGame implements Serializable{
 	
 	public HangmanGame(String ans) {
 		this.answer = ans;
+		this.mistakesLeft = 6;
 	}
 
 	public String getAnswer() {
