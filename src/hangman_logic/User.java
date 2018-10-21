@@ -7,7 +7,7 @@ public class User implements Serializable{
 	private String username;
 	private int totalWins;
 	private int totalGames;
-//	private Dictionary dictionary;
+	private Dictionary dictionary;
 	private HangmanGame gameState;
 	private boolean gameInProgress;
 	

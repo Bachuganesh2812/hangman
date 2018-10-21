@@ -1,12 +1,11 @@
 package hangman_GUI;
 
-import java.awt.LayoutManager;
+import javax.swing.JOptionPane;
 
-import javax.swing.JPanel;
 
-public class HangmanUserNameDropDownPanel extends JPanel {
+public class HangmanUserNameDropDownOptionPane extends JOptionPane {
 
-	public HangmanUserNameDropDownPanel() {
+	public HangmanUserNameDropDownOptionPane() {
 		// TODO Auto-generated constructor stub
 	}//HangmanUserNameDropDownPanel()
 
