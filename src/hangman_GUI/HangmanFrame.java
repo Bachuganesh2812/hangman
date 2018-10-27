@@ -6,20 +6,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 
-import hangman_logic.Scoreboard;
+import hangman_logic.HangmanController;
+import hangman_logic.HangmanGame;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 public class HangmanFrame extends JFrame implements ActionListener, WindowListener{
 	
-	Scoreboard scoreboard;
+	private HangmanController hangmanController;
+	private HangmanGame game;
 
 	public HangmanFrame() throws HeadlessException {
 		
@@ -70,10 +71,11 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	}
 	
 	public void start() {
-		scoreboard = new Scoreboard();
-		if(scoreboard.retrieveScoreboard()) {
+		hangmanController = new HangmanController();
+		if(hangmanController.retrieveScoreboard()) {
 			int choice = JOptionPane.showConfirmDialog(this, "Have you played Hangman before?", "Start",
 					JOptionPane.YES_NO_OPTION);
+			this.setEnabled(true);
 			if (choice == 0) {
 				displayUserDropDown();
 			} else {
@@ -86,19 +88,50 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 
 	public void displayUserDropDown() {
 		
-		String[] usernames = scoreboard.retrieveUserNames();
+		String[] usernames = hangmanController.retrieveUserNames();
 		String dialog = "Select your username.\nDon't see your username?\nClick cancel to enter it.";
 		String title = "Select your username";
 		
-		String choice = (String) JOptionPane.showInputDialog(null, dialog, title, 
+		String choice = (String) JOptionPane.showInputDialog(this, dialog, title, 
 				JOptionPane.PLAIN_MESSAGE, null, usernames, "  ");
 		
 	}
 	
 	public void displayEnterUser() {
+		String dialog = "Enter your username.\nRemember your username?\nClick cancel to select it.";
+		String title = "Enter your username";
+		
+		String username = (String) JOptionPane.showInputDialog(this, dialog, title, 
+				JOptionPane.PLAIN_MESSAGE);
+	
+		if(hangmanController.checkIfUsernameIsTaken(username)) {
+			displayWarning(username);
+		} else {
+			
+		}
+	}
+	
+	public void displayWarning(String username) {
+		String dialog = "The username: " + username + " is already taken.\nDo you want to continue as " + username + "?";
+		String title = "Username Taken";
+		
+		int choice = JOptionPane.showConfirmDialog(this, dialog, title,
+				JOptionPane.YES_NO_OPTION);
+		if(choice == 0 && hangmanController.retrieveGame()) {
+			displayContinueSavedGame();
+		} else if (choice == 0) {
+			hangmanController.newGame();
+		} else {
+			displayEnterUser();
+		}
 		
 	}
 	
+	private void displayContinueSavedGame() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
