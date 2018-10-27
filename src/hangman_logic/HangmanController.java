@@ -22,7 +22,7 @@ public class HangmanController {
 			if(word == null) {
 				return false;
 			} else {
-				this.game = new HangmanGame(dictionary.getRandomWord());
+				this.game = new HangmanGame(word);
 				game.initializeAnswer();
 				return true;
 			}

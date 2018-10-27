@@ -1,7 +1,5 @@
 package hangman_GUI;
 
-import java.awt.LayoutManager;
-
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import java.awt.SystemColor;
@@ -10,58 +8,64 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
-public class HangmanWordPanel extends JPanel {
-	private JTextField textField;
+public class HangmanWordPanel extends JPanel implements ActionListener{
+	private JTextField guessTextField;
+	private JTextArea wordTextArea;
+	private JButton btnGuess;
+	private JButton btnClear;
+	private JButton btnGuessWholeWord;
 
 	public HangmanWordPanel() {
 		setLayout(null);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
-		textArea.setBackground(SystemColor.control);
-		textArea.setBounds(60, 62, 315, 107);
-		add(textArea);
+		//36
+		wordTextArea = new JTextArea();
+		wordTextArea.setFont(new Font("Calibri", Font.PLAIN, 35));
+		wordTextArea.setEditable(false);
+		wordTextArea.setBackground(SystemColor.control);
+		wordTextArea.setBounds(47, 11, 374, 188);
+		add(wordTextArea);
 		
-		textField = new JTextField();
-		textField.setBounds(130, 195, 75, 21);
-		add(textField);
-		textField.setColumns(10);
+		guessTextField = new JTextField();
+		guessTextField.setBounds(141, 210, 75, 21);
+		add(guessTextField);
+		guessTextField.setColumns(10);
 		
-		JButton btnNewButton = new JButton("Guess");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnNewButton.setBounds(215, 195, 75, 21);
-		add(btnNewButton);
+		btnGuess = new JButton("Guess");
+		btnGuess.setBounds(238, 210, 75, 21);
+		add(btnGuess);
+		btnGuess.addActionListener(this);
 		
-		JButton btnClear = new JButton("Clear");
-		btnClear.setBounds(300, 195, 75, 21);
+		btnClear = new JButton("Clear");
+		btnClear.setBounds(323, 210, 75, 21);
 		add(btnClear);
+		btnClear.addActionListener(this);
 		
-		JButton btnGuessWholeWord = new JButton("Guess Whole Word");
-		btnGuessWholeWord.setBounds(215, 227, 160, 23);
+		btnGuessWholeWord = new JButton("Guess Whole Word");
+		btnGuessWholeWord.setBounds(238, 242, 160, 23);
 		add(btnGuessWholeWord);
+		btnGuessWholeWord.addActionListener(this);
 		
-		JLabel lblNewLabel = new JLabel("Your Guess:");
-		lblNewLabel.setBounds(60, 198, 60, 18);
-		add(lblNewLabel);
-		// TODO Auto-generated constructor stub
+		JLabel lblYourGuess = new JLabel("Your Guess:");
+		lblYourGuess.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblYourGuess.setBounds(38, 210, 93, 18);
+		add(lblYourGuess);
 	}
 
-	public HangmanWordPanel(LayoutManager arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == btnGuess) {
+			
+		}
 	}
-
-	public HangmanWordPanel(boolean arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
+	
+	public String getGuessValue() {
+		return guessTextField.getText();
 	}
-
-	public HangmanWordPanel(LayoutManager arg0, boolean arg1) {
-		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
+	
+	public void drawWord(String word) {
+		wordTextArea.append(word);	
 	}
 }

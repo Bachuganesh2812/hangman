@@ -16,20 +16,25 @@ import hangman_logic.HangmanGame;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import javax.swing.JPanel;
-import javax.swing.BoxLayout;
 import javax.swing.JTextArea;
 import java.awt.SystemColor;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class HangmanFrame extends JFrame implements ActionListener, WindowListener{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private HangmanController hangmanController;
 	private HangmanGame game;
-
-	private HangmanWordPanel panel;
 	private JTextArea mistakesLeft;
+	private HangmanWordPanel wordPanel;
+	private JPanel guessedLettersPanel;
+	private HangmanPanel hangmanPanel;
+	private JLabel guessedLetters;
 	
 	public HangmanFrame() throws HeadlessException {
 		
@@ -50,16 +55,38 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnMenu.add(mntmQuit);
-		getContentPane().setLayout(new BorderLayout(0, 0));
-		
-		panel = new HangmanWordPanel();
-		getContentPane().add(panel, BorderLayout.CENTER);
-		panel.setEnabled(false);
+		getContentPane().setLayout(null);
 		
 		mistakesLeft = new JTextArea();
+		mistakesLeft.setBounds(0, 0, 675, 45);
 		mistakesLeft.setBackground(SystemColor.control);
 		mistakesLeft.setEditable(false);
-		getContentPane().add(mistakesLeft, BorderLayout.NORTH);
+		getContentPane().add(mistakesLeft);
+		
+		wordPanel = new HangmanWordPanel();
+		wordPanel.setBounds(181, 56, 484, 269);
+		getContentPane().add(wordPanel);
+		
+		hangmanPanel = new HangmanPanel();
+		hangmanPanel.setBounds(0, 56, 178, 269);
+		getContentPane().add(hangmanPanel);
+		
+		guessedLettersPanel = new JPanel();
+		guessedLettersPanel.setBounds(0, 336, 675, 174);
+		getContentPane().add(guessedLettersPanel);
+		guessedLettersPanel.setLayout(null);
+		
+		guessedLetters = new JLabel("Guessed Letters:");
+		guessedLetters.setFont(new Font("Calibri", Font.PLAIN, 23));
+		guessedLetters.setBounds(10, 11, 155, 29);
+		guessedLettersPanel.add(guessedLetters);
+		
+		mistakesLeft.setVisible(false);
+		wordPanel.setVisible(false);
+		hangmanPanel.setVisible(false);
+		guessedLettersPanel.setVisible(false);
+		guessedLetters.setVisible(false);
+		
 		// TODO Auto-generated constructor stub
 	}
 
@@ -90,31 +117,33 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	
 	public void start() {
 		hangmanController = new HangmanController();
-		hangmanController.initializeHangman();
-		System.out.println("initialize called");
-		if(hangmanController.retrieveScoreboard()) {
-			int choice = JOptionPane.showConfirmDialog(this, "Have you played Hangman before?", "Start",
-					JOptionPane.YES_NO_OPTION);
-			this.setEnabled(true);
-			if (choice == 0) {
-				displayUserDropDown();
-			} else {
+		if(hangmanController.initializeHangman()) {
+			System.out.println("game initialized");
+			if(hangmanController.retrieveScoreboard()) {
+				int choice = JOptionPane.showConfirmDialog(this, "Have you played Hangman before?", "Start",
+						JOptionPane.YES_NO_OPTION);
+				this.setEnabled(true);
+				if (choice == 0) {
+					displayUserDropDown();
+				} else {
+					displayEnterUser();
+				}
+			} else
 				displayEnterUser();
-			}
-		} else
-			displayEnterUser();
+		}else {
+			System.out.println("Game not initialized");
+		}
+		
 		
 	}
 
 	public void displayUserDropDown() {
-		
 		String[] usernames = hangmanController.retrieveUserNames();
 		String dialog = "Select your username.\nDon't see your username?\nClick cancel to enter it.";
 		String title = "Select your username";
 		
 		String choice = (String) JOptionPane.showInputDialog(this, dialog, title, 
 				JOptionPane.PLAIN_MESSAGE, null, usernames, "  ");
-		
 	}
 	
 	public void displayEnterUser() {
@@ -127,7 +156,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if(hangmanController.checkIfUsernameIsTaken(username)) {
 			displayWarning(username);
 		} else {
-			
+			displayContinueSavedGame();
 		}
 	}
 	
@@ -158,13 +187,20 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			game = hangmanController.playSavedGame();
 		} else {
 			game = hangmanController.getGame();
+			System.out.println(game.toString());
 			displayGame();
 		}
 		
 	}
 	
 	public void displayGame() {
+		mistakesLeft.setVisible(true);
+		wordPanel.setVisible(true);
+		hangmanPanel.setVisible(true);
+		guessedLettersPanel.setVisible(true);
+		guessedLetters.setVisible(true);
 		
+		wordPanel.drawWord(game.toString());
 	}
 
 	@Override

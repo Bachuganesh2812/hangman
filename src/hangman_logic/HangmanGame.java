@@ -98,8 +98,9 @@ public class HangmanGame implements Serializable{
 		String word = "";
 		for(int i = 0; i < interfaceLetters.getLength(); i++) {
 			word += interfaceLetters.getElementAt(i);
+			word += " ";
 		}
-		return null;
+		return word;
 	}
 
 }
