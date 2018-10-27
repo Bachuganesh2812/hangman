@@ -16,12 +16,21 @@ import hangman_logic.HangmanGame;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import javax.swing.JPanel;
+import javax.swing.BoxLayout;
+import javax.swing.JTextArea;
+import java.awt.SystemColor;
 
 public class HangmanFrame extends JFrame implements ActionListener, WindowListener{
 	
 	private HangmanController hangmanController;
 	private HangmanGame game;
 
+	private HangmanWordPanel panel;
+	private JTextArea mistakesLeft;
+	
 	public HangmanFrame() throws HeadlessException {
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -41,7 +50,16 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnMenu.add(mntmQuit);
-		getContentPane().setLayout(null);
+		getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		panel = new HangmanWordPanel();
+		getContentPane().add(panel, BorderLayout.CENTER);
+		panel.setEnabled(false);
+		
+		mistakesLeft = new JTextArea();
+		mistakesLeft.setBackground(SystemColor.control);
+		mistakesLeft.setEditable(false);
+		getContentPane().add(mistakesLeft, BorderLayout.NORTH);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -72,6 +90,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	
 	public void start() {
 		hangmanController = new HangmanController();
+		hangmanController.initializeHangman();
+		System.out.println("initialize called");
 		if(hangmanController.retrieveScoreboard()) {
 			int choice = JOptionPane.showConfirmDialog(this, "Have you played Hangman before?", "Start",
 					JOptionPane.YES_NO_OPTION);
@@ -120,7 +140,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if(choice == 0 && hangmanController.retrieveGame()) {
 			displayContinueSavedGame();
 		} else if (choice == 0) {
-			game = new HangmanGame();
+			game = hangmanController.getGame();
+			displayGame();
 		} else {
 			displayEnterUser();
 		}
@@ -136,8 +157,13 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if(choice == 0) {
 			game = hangmanController.playSavedGame();
 		} else {
-			game = new HangmanGame();
+			game = hangmanController.getGame();
+			displayGame();
 		}
+		
+	}
+	
+	public void displayGame() {
 		
 	}
 

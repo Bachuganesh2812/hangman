@@ -37,13 +37,18 @@ public class Dictionary implements Serializable{
 			return false;
 	}
 
-	
+	// what happens at last word?
 	public String getRandomWord() {
-		return null;
-	}
-
-	public boolean deleteWord() {
-		return false;
+		String word = null;
+		if(dictionary.getLength() >= 1) {
+			int randNum = (int)(Math.random() * dictionary.getLength() - 1);
+			word = dictionary.getElementAt(randNum);
+			dictionary.remove(randNum);
+		}else {
+			System.out.println("There is no more words left");
+		}
+		
+		return word;
 	}
 	
 }

@@ -8,10 +8,20 @@ public class HangmanGame implements Serializable{
 	
 	private SinglyLinkedList<Character> answerLetters = new SinglyLinkedList<Character>();
 	private SinglyLinkedList<Character> guessedLetters = new SinglyLinkedList<Character>();
+	private SinglyLinkedList<Character> interfaceLetters = new SinglyLinkedList<Character>();
 	private String answer;
 	private int mistakesLeft;
 	private boolean usedHint = false;
 	
+	public HangmanGame() {
+		this.answer = null;
+		this.mistakesLeft = 0;
+	}
+	
+	public HangmanGame(String ans) {
+		this.answer = ans;
+		this.mistakesLeft = 6;
+	}
 
 	public SinglyLinkedList<Character> getAnswerLetters() {
 		return answerLetters;
@@ -37,21 +47,23 @@ public class HangmanGame implements Serializable{
 		this.guessedLetters = guessedLetters;
 	}
 
-	public HangmanGame() {
-		this.answer = null;
-	}
-	
-	public HangmanGame(String ans) {
-		this.answer = ans;
-		this.mistakesLeft = 6;
-	}
-
 	public String getAnswer() {
 		return answer;
 	}
 
 	public void setAnswer(String answer) {
 		this.answer = answer;
+	}
+	
+	public void initializeAnswer( ) {
+		for(int i = answer.length() - 1; i >= 0; i--) {
+			answerLetters.add(answer.charAt(i));
+			if(Character.isLetter(answer.charAt(i))) {
+				interfaceLetters.add('_');
+			} else {
+				interfaceLetters.add(answer.charAt(i));
+			}
+		}
 	}
 
 	public int checkLetter(char letter) {
@@ -82,6 +94,12 @@ public class HangmanGame implements Serializable{
 		return 'a';
 	}
 	
-	
+	public String toString() {
+		String word = "";
+		for(int i = 0; i < interfaceLetters.getLength(); i++) {
+			word += interfaceLetters.getElementAt(i);
+		}
+		return null;
+	}
 
 }

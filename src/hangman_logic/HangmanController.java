@@ -1,5 +1,7 @@
 package hangman_logic;
 
+import linked_data_structures.SinglyLinkedList;
+
 public class HangmanController {
 	
 	HangmanGame game;
@@ -7,17 +9,48 @@ public class HangmanController {
 	Scoreboard scoreboard;
 
 	public HangmanController() {
-		game = new HangmanGame();
-		dictionary = new Dictionary();
-		scoreboard = new Scoreboard();
+		this.game = new HangmanGame();
+		this.dictionary = new Dictionary();
+		this.scoreboard = new Scoreboard();
 	}
 	
 	public boolean initializeHangman() {
 		if(!dictionary.initializeDictionary()) {
 			return false;
-		} 
-		
-		return false;
+		} else {
+			String word = dictionary.getRandomWord();
+			if(word == null) {
+				return false;
+			} else {
+				this.game = new HangmanGame(dictionary.getRandomWord());
+				game.initializeAnswer();
+				return true;
+			}
+		}
+	}
+
+	public HangmanGame getGame() {
+		return game;
+	}
+
+	public void setGame(HangmanGame game) {
+		this.game = game;
+	}
+
+	public Dictionary getDictionary() {
+		return dictionary;
+	}
+
+	public void setDictionary(Dictionary dictionary) {
+		this.dictionary = dictionary;
+	}
+
+	public Scoreboard getScoreboard() {
+		return scoreboard;
+	}
+
+	public void setScoreboard(Scoreboard scoreboard) {
+		this.scoreboard = scoreboard;
 	}
 
 	public boolean retrieveGame() {
@@ -39,11 +72,14 @@ public class HangmanController {
 	}
 	
 	public boolean checkIfUsernameIsTaken(String userName) {
-		return true;
+		return false;
 	}
 	
-	private boolean getRandomWord() {
+	public boolean getNewGame() {
+		
+		
 		return false;
+		
 	}
 	
 
