@@ -120,7 +120,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if(choice == 0 && hangmanController.retrieveGame()) {
 			displayContinueSavedGame();
 		} else if (choice == 0) {
-			hangmanController.newGame();
+			game = new HangmanGame();
 		} else {
 			displayEnterUser();
 		}
@@ -128,7 +128,16 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	}
 	
 	private void displayContinueSavedGame() {
-		// TODO Auto-generated method stub
+		String dialog = "There is a saved game on file.\nDo you want to continue where the last player left off?";
+		String title = "Saved Game Available";
+		
+		int choice = JOptionPane.showConfirmDialog(this, dialog, title,
+				JOptionPane.YES_NO_OPTION);
+		if(choice == 0) {
+			game = hangmanController.playSavedGame();
+		} else {
+			game = new HangmanGame();
+		}
 		
 	}
 

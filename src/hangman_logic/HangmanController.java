@@ -1,16 +1,36 @@
 package hangman_logic;
 
 public class HangmanController {
+	
+	HangmanGame game;
+	Dictionary dictionary;
+	Scoreboard scoreboard;
 
 	public HangmanController() {
-		// TODO Auto-generated constructor stub
+		game = new HangmanGame();
+		dictionary = new Dictionary();
+		scoreboard = new Scoreboard();
+	}
+	
+	public boolean initializeHangman() {
+		if(!dictionary.initializeDictionary()) {
+			return false;
+		} 
+		
+		return false;
 	}
 
 	public boolean retrieveGame() {
+		//de-serialize the game here?
+		// game = 
 		return true;
 	}
 	
 	public String[] retrieveUserNames() {
+		return null;
+	}
+	
+	public HangmanGame playSavedGame() {
 		return null;
 	}
 	
@@ -22,8 +42,11 @@ public class HangmanController {
 		return true;
 	}
 	
-	public HangmanGame newGame() {
-		return null;
+	private boolean getRandomWord() {
+		return false;
 	}
+	
+
+	
 }
 
