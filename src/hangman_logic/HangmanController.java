@@ -1,7 +1,5 @@
 package hangman_logic;
 
-import linked_data_structures.SinglyLinkedList;
-
 public class HangmanController {
 	
 	HangmanGame game;
@@ -16,16 +14,12 @@ public class HangmanController {
 	
 	public boolean initializeHangman() {
 		if(!dictionary.initializeDictionary()) {
+			System.out.println("Dictionary not initialized");
 			return false;
 		} else {
-			String word = dictionary.getRandomWord();
-			if(word == null) {
-				return false;
-			} else {
-				this.game = new HangmanGame(word);
-				game.initializeAnswer();
-				return true;
-			}
+			System.out.println("Dictionary initialized");
+			System.out.println(dictionary.toString());
+			return getNewGame();
 		}
 	}
 
@@ -76,10 +70,23 @@ public class HangmanController {
 	}
 	
 	public boolean getNewGame() {
+		String word = dictionary.getRandomWord();
+		if(word == null) {
+			return false;
+		} else {
+			this.game = new HangmanGame(word);
+			game.initializeAnswer();
+			return true;
+		}
+	}
+
+	public void lose() {
+		// TODO Auto-generated method stub
 		
-		
-		return false;
-		
+	}
+	
+	public void saveGame(HangmanGame game) {
+		dictionary.saveDictionary();
 	}
 	
 

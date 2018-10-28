@@ -1,9 +1,11 @@
 package hangman_files;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
@@ -14,18 +16,22 @@ public class DictionaryFile {
 	
 	private static final String FILE_NAME_STATIC = "dictionary.txt";
 	private static final String FILE_NAME_SERIALIZED = "dictionary.ser";
-	private SinglyLinkedList<String> dictionary;
+	private SinglyLinkedList<String> dictionaryList;
+	private Dictionary dictionary = new Dictionary();
 
 	public DictionaryFile() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public boolean readDictionary() {
 		boolean dictionaryCreated = false;
 		
 		if(deserializeDictionary()) {
+			System.out.println("Dictionary deserialized");
 			dictionaryCreated = true;
 		} else if(readDictionaryFile()) {
+
+			System.out.println("Dictionary read from text file");
+			dictionary = new Dictionary();
 			dictionaryCreated = true;
 		} 
 		
@@ -34,7 +40,26 @@ public class DictionaryFile {
 	
 	private boolean deserializeDictionary() {
 		
-		return false;
+		boolean dictionaryDeserialized = false;
+		try {
+			FileInputStream inStream = new FileInputStream(FILE_NAME_SERIALIZED);
+			ObjectInputStream objectInputFile = new ObjectInputStream(inStream);
+			dictionary = (Dictionary) objectInputFile.readObject();
+			dictionaryDeserialized = true;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File not found");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("File not found");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			System.out.println("Class not found");
+			e.printStackTrace();
+		}
+		
+		
+		return dictionaryDeserialized;
 	}
 	
 	private boolean readDictionaryFile() {
@@ -43,22 +68,23 @@ public class DictionaryFile {
 		try {
 			in = new Scanner(dictionaryFile);
 			in.useDelimiter("\r\n");
-			dictionary = new SinglyLinkedList<String>();
+			dictionaryList = new SinglyLinkedList<String>();
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 			return false;
 		}
 		
 		while(in.hasNext()) {
-			dictionary.add(in.nextLine());
+			dictionaryList.add(in.nextLine());
 		}
 		
 		in.close();
 		
-		if(dictionary.getLength() == 0) {
+		if(dictionaryList.getLength() == 0) {
 			return false;
 		}
 		
+		dictionary.setDictionary(dictionaryList);
 		return true;
 	}
 	
@@ -71,17 +97,17 @@ public class DictionaryFile {
 			ObjectOutputStream outputFile = new ObjectOutputStream(outStream);
 			outputFile.writeObject(dictionary);
 			dictionarySerialized = true;
+			outputFile.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+		} 
+
 		return dictionarySerialized;
 	}
 	
-	public SinglyLinkedList<String> getDictionary() {
+	public Dictionary getDictionary() {
 		return dictionary;
 	}
-
 }
