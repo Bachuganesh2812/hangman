@@ -58,6 +58,8 @@ public class HangmanController {
 	}
 	
 	public HangmanGame playSavedGame() {
+		
+		
 		return null;
 	}
 	
@@ -87,6 +89,7 @@ public class HangmanController {
 	
 	public void saveGame(HangmanGame game) {
 		dictionary.saveDictionary();
+		game.saveGame();
 	}
 	
 

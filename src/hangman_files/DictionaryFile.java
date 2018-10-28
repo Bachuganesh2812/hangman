@@ -46,6 +46,7 @@ public class DictionaryFile {
 			ObjectInputStream objectInputFile = new ObjectInputStream(inStream);
 			dictionary = (Dictionary) objectInputFile.readObject();
 			dictionaryDeserialized = true;
+			objectInputFile.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("File not found");

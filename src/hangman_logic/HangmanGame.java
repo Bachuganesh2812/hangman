@@ -2,27 +2,34 @@ package hangman_logic;
 
 import java.io.Serializable;
 
+import hangman_files.GameFile;
 import linked_data_structures.SinglyLinkedList;
 
 public class HangmanGame implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private SinglyLinkedList<Character> answerLetters = new SinglyLinkedList<Character>();
 	private SinglyLinkedList<Character> guessedLetters = new SinglyLinkedList<Character>();
 	private String interfaceLetters;
 	private String answer;
 	private int mistakesLeft;
-	private boolean usedHint = false;
+	private boolean usedHint;
 
 	public HangmanGame() {
 		this.answer = null;
 		this.mistakesLeft = 6;
 		this.interfaceLetters = "";
+		usedHint = false;
 	}
 
 	public HangmanGame(String ans) {
 		this.answer = ans;
 		this.mistakesLeft = 6;
 		this.interfaceLetters = "";
+		usedHint = false;
 	}
 
 	public SinglyLinkedList<Character> getAnswerLetters() {
@@ -176,7 +183,16 @@ public class HangmanGame implements Serializable {
 	}
 
 	public boolean saveGame() {
-		return true;
+		GameFile file = new GameFile();
+		return (file.saveGame(this));
+	}
+	
+	public HangmanGame retrieveSavedGame() {
+		GameFile file = new GameFile();
+		if(file.deserializeGame())
+			return file.getGame();
+		else
+			return null;
 	}
 
 	public boolean startGame() {

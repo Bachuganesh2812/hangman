@@ -39,10 +39,7 @@ public class Dictionary implements Serializable{
 	}
 
 	public boolean saveDictionary() {
-		if(file.saveDictionary(this))
-			return true;
-		else 
-			return false;
+		return file.saveDictionary(this);
 	}
 
 	// what happens at last word?
