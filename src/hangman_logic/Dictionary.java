@@ -7,8 +7,12 @@ import linked_data_structures.SinglyLinkedList;
 
 public class Dictionary implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private SinglyLinkedList<String> dictionary;
-	private DictionaryFile file = new DictionaryFile();
+	private transient DictionaryFile file;
 	
 	public Dictionary() {
 		dictionary = null;
@@ -18,11 +22,15 @@ public class Dictionary implements Serializable{
 		return dictionary;
 	}
 	
-	public boolean initializeDictionary() {
-		boolean dictionaryInitialized = false;
+	public void setDictionary(SinglyLinkedList<String> dictionary) {
+		this.dictionary = dictionary;
+	}
 	
+	public boolean initializeDictionary() {
+		boolean dictionaryInitialized = false;	
+		file = new DictionaryFile(); 
 		if(file.readDictionary()) {
-			dictionary = file.getDictionary();
+			dictionary = file.getDictionary().getDictionary();
 			dictionaryInitialized = true;
 		} else {
 			System.out.println("Something went wrong with the dictionary file.");
@@ -49,6 +57,17 @@ public class Dictionary implements Serializable{
 		}
 		
 		return word;
+	}
+	
+	public String toString() {
+		String dictionaryString = "";
+		
+		for(int i = 0; i < dictionary.getLength(); i++) {
+			dictionaryString += dictionary.getElementAt(i);
+			dictionaryString += "\n";
+		}
+		
+		return dictionaryString;
 	}
 	
 }
