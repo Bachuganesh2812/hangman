@@ -194,6 +194,11 @@ public class HangmanGame implements Serializable {
 		else
 			return null;
 	}
+	
+	public boolean isSavedGame() {
+		GameFile file = new GameFile();
+		return file.deserializeGame();
+	}
 
 	public boolean startGame() {
 		return false;

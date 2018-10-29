@@ -47,10 +47,8 @@ public class HangmanController {
 		this.scoreboard = scoreboard;
 	}
 
-	public boolean retrieveGame() {
-		//de-serialize the game here?
-		// game = 
-		return true;
+	public boolean isSavedGame() {
+		return game.isSavedGame();
 	}
 	
 	public String[] retrieveUserNames() {
