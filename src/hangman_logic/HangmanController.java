@@ -19,7 +19,7 @@ public class HangmanController {
 		} else {
 			System.out.println("Dictionary initialized");
 			System.out.println(dictionary.toString());
-			return getNewGame();
+			return true;
 		}
 	}
 
@@ -61,8 +61,8 @@ public class HangmanController {
 		return null;
 	}
 	
-	public boolean retrieveScoreboard() {
-		return true;
+	public boolean isScoreboard() {
+		return this.scoreboard.retrieveScoreboard();
 	}
 	
 	public boolean checkIfUsernameIsTaken(String userName) {

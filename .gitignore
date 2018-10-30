@@ -1,6 +1,8 @@
 #compile files
 *.class
 *.classpath
+*.project
+*.ser
 
 #JAR files
 *.jar

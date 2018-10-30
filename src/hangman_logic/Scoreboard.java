@@ -9,22 +9,26 @@ import linked_data_structures.DoublyLinkedList;
 public class Scoreboard implements Serializable{
 
 	private DoublyLinkedList<User> scoreboard = new DoublyLinkedList<User>();
-	private ScoreboardFile scoreboardFile;
 	
 	public Scoreboard() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	public boolean retrieveScoreboard() {
-		scoreboardFile = new ScoreboardFile();
-		scoreboard = scoreboardFile.getScoreBoard();
+		ScoreboardFile scoreboardFile = new ScoreboardFile();
+		scoreboard = scoreboardFile.getScoreboard().getScoreboard();
 		
-		if(scoreboard != null)
-			return (scoreboard.getLength() > 0);
-		else
-			return false;
+		return (scoreboard.getLength() > 0);
 	}
 	
+	public DoublyLinkedList<User> getScoreboard() {
+		return scoreboard;
+	}
+
+	public void setScoreboard(DoublyLinkedList<User> scoreboard) {
+		this.scoreboard = scoreboard;
+	}
+
 	public String[] retrieveUserNames() {
 		String[] usernames;
 		
@@ -38,20 +42,25 @@ public class Scoreboard implements Serializable{
 		} else 
 			usernames = null;
 		
-		
 		return usernames;
 	}
 	
-	public boolean addUser(User user) {
-		return false;
+	public void addUser(User user) {
+		this.scoreboard.add(user);
 	}
 	
 	public boolean saveState() {
 		return false;
 	}
 	
-	public boolean equals(Object o) {
-		return false;
+	public boolean checkForUser(User user) {
+		boolean userExists = false;
+		
+		for(int i = 0; i < scoreboard.getLength(); i++) {
+			scoreboard.getElementAt(i).equals(user);
+		}
+		
+		return userExists;
 	}
 
 }

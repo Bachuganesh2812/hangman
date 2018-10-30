@@ -31,13 +31,10 @@ public class GameFile{
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("File not found");
-			e.printStackTrace();
 		} catch (IOException e) {
 			System.out.println("IOException");
-			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			System.out.println("Class not found");
-			e.printStackTrace();
 		}
 		
 		

@@ -1,34 +1,71 @@
 package hangman_files;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import hangman_logic.HangmanGame;
 import hangman_logic.Scoreboard;
 import hangman_logic.User;
 import linked_data_structures.DoublyLinkedList;
 
 public class ScoreboardFile {
 	
-	private static final String FILE_NAME = "scoreboad.ser";
+	private static final String FILE_NAME = "scoreboard.ser";
+	private Scoreboard scoreboard = new Scoreboard();
+	
+	
+	public boolean deserializeGame() {
+		
+		boolean scoreboardDeserialized = false;
+		try {
+			FileInputStream inStream = new FileInputStream(FILE_NAME);
+			ObjectInputStream objectInputFile = new ObjectInputStream(inStream);
+			scoreboard = (Scoreboard) objectInputFile.readObject();
+			scoreboardDeserialized = true;
+			
+			objectInputFile.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File not found");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("IOException");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			System.out.println("Class not found");
+			e.printStackTrace();
+		}
+		
+		
+		return scoreboardDeserialized;
+	}
 
-	public ScoreboardFile() {
-		// TODO Auto-generated constructor stub
-	}
+	public boolean saveScoreboard(Scoreboard scoreboard) {
 
-	private boolean open() {
-		return false;
+		boolean scoreboardSerialized = false;
+
+		try {
+			FileOutputStream outStream = new FileOutputStream(FILE_NAME);
+			ObjectOutputStream outputFile = new ObjectOutputStream(outStream);
+			outputFile.writeObject(scoreboard);
+			scoreboardSerialized = true;
+			
+			System.out.println("Scoreboard serialized");
+			outputFile.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return scoreboardSerialized;
 	}
 	
-	private boolean read() {
-		return false;
-	}
-	
-	public boolean write (Scoreboard scoreboard) {
-		return false;
-	}
-	
-	private boolean close() {
-		return false;
-	}
-	
-	public DoublyLinkedList<User> getScoreBoard() {
-		return null;
+	public Scoreboard getScoreboard() {
+		return this.scoreboard;
 	}
 }

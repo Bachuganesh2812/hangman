@@ -16,20 +16,17 @@ public class HangmanGame implements Serializable {
 	private String interfaceLetters;
 	private String answer;
 	private int mistakesLeft;
-	private boolean usedHint;
 
 	public HangmanGame() {
 		this.answer = null;
 		this.mistakesLeft = 6;
 		this.interfaceLetters = "";
-		usedHint = false;
 	}
 
 	public HangmanGame(String ans) {
 		this.answer = ans;
 		this.mistakesLeft = 6;
 		this.interfaceLetters = "";
-		usedHint = false;
 	}
 
 	public SinglyLinkedList<Character> getAnswerLetters() {
@@ -106,6 +103,8 @@ public class HangmanGame implements Serializable {
 			if (checkForLose()) {
 				unmaskWholeWord();
 				return -10;
+			} else if(checkForWin()) {
+				return 10;
 			}
 
 			guessedLetters.add(let);
@@ -117,6 +116,17 @@ public class HangmanGame implements Serializable {
 
 	private boolean checkForLose() {
 		return (mistakesLeft == 0);
+	}
+	
+	private boolean checkForWin() {
+		boolean isEqual = true;
+		
+		for(int i = 0; i < answerLetters.getLength(); i++) {
+			if(interfaceLetters.charAt(i) != answerLetters.getElementAt(i))
+				isEqual = false;
+		}
+		
+		return isEqual;
 	}
 
 	private boolean checkForMatchingLetter(char letter) {
@@ -178,10 +188,6 @@ public class HangmanGame implements Serializable {
 		return 0;
 	}// checkGameDone()
 
-	public boolean equals(Object o) {
-		return true;
-	}
-
 	public boolean saveGame() {
 		GameFile file = new GameFile();
 		return (file.saveGame(this));
@@ -205,16 +211,6 @@ public class HangmanGame implements Serializable {
 	}
 
 	public boolean giveHint() {
-		if (!usedHint) {
-			addHinted();
-			usedHint = true;
-			return true;
-		}
-
-		return false;
-	}
-
-	private boolean addHinted() {
 		for (int i = 0; i < answerLetters.getLength(); i++) {
 			if (!interfaceLetters.contains(answerLetters.getElementAt(i).toString())) {
 				checkForMatchingLetter(answerLetters.getElementAt(i));
@@ -231,14 +227,31 @@ public class HangmanGame implements Serializable {
 			}
 		}
 	}
-
-	public String toString() {
+	
+	public String displayGuessedLetters() {
 		String guessedLettersString = "";
 		for (int i = 0; i < guessedLetters.getLength(); i++) {
 			guessedLettersString += guessedLetters.getElementAt(i);
 		}
 
 		return guessedLettersString;
+	}
+
+	@Override
+	public String toString() {
+		return null;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		boolean isEqual = true;
+		if(o instanceof SinglyLinkedList<?>) {
+			for(int i = 0; i < answerLetters.getLength(); i++) {
+				if(interfaceLetters.charAt(i) != answerLetters.getElementAt(i))
+					isEqual = false;
+			}
+		}
+		return isEqual;
 	}
 
 }

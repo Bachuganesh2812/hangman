@@ -7,15 +7,12 @@ public class User implements Serializable{
 	private String username;
 	private int totalWins;
 	private int totalGames;
-	private Dictionary dictionary;
-	private HangmanGame gameState;
 	private boolean gameInProgress;
 	
 	public User() {
 		this.username = null;
 		this.totalWins = 0;
 		this.totalGames = 0;
-		this.gameState = null;
 		this.gameInProgress = false;
 	}
 	
@@ -23,7 +20,6 @@ public class User implements Serializable{
 		this.username = uName;
 		this.totalWins = wins;
 		this.totalGames = games;
-		this.gameState = state;
 		this.gameInProgress = inProg;
 	};
 	
@@ -51,28 +47,19 @@ public class User implements Serializable{
 		this.totalGames = totalGames;
 	}
 
-	public HangmanGame getGameState() {
-		return gameState;
-	}
-
-	public void setGameState(HangmanGame gameState) {
-		this.gameState = gameState;
-	}
-
-	public boolean isGameInProgress() {
-		return gameInProgress;
-	}
-
-	public void setGameInProgress(boolean gameInProgress) {
-		this.gameInProgress = gameInProgress;
+	@Override 
+	public boolean equals(Object o) {
+		if(o instanceof User) {
+			if(((User) o).getUsername().equals(this.username)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
-	public void newGame() {
-		
-	}
-	
+	@Override
 	public String toString() {
-		return null;	
+		return this.getUsername() + " has played a total of "+ this.totalGames + " games and has won " + this.totalWins;	
 	}
 
 }
