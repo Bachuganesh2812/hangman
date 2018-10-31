@@ -26,7 +26,7 @@ import javax.swing.JTextPane;
 public class HangmanFrame extends JFrame implements ActionListener, WindowListener {
 
 	/**
-	 * 
+	 * WORDS WITH SPACES DON'T WORK
 	 */
 	private static final long serialVersionUID = 1L;
 	private HangmanController hangmanController;
@@ -215,7 +215,6 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if (hangmanController.isScoreboard()) {
 			int choice = JOptionPane.showConfirmDialog(this, "Have you played Hangman before?", "Start",
 					JOptionPane.YES_NO_OPTION);
-			this.setEnabled(true);
 			if (choice == 0) {
 				displayUserDropDown();
 			} else {
@@ -233,6 +232,9 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 
 		String choice = (String) JOptionPane.showInputDialog(this, dialog, title, JOptionPane.PLAIN_MESSAGE, null,
 				usernames, "  ");
+		hangmanController.setCurrentPlayer(choice);
+		playGame();
+		
 	}
 
 	public void enterUsername() {
@@ -240,6 +242,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			if(hangmanController.checkIfUsernameIsTaken(fldUsername.getText())) {
 				displayWarning(fldUsername.getText());
 			} else {
+				hangmanController.addUser(fldUsername.getText());
 				playGame();
 			}
 		} else {
@@ -279,27 +282,23 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if (choice == 0) {
 			game = new HangmanGame();
 			game = game.retrieveSavedGame();
+			hangmanController.initializeHangman();
 			if (game != null) {
 				System.out.println("Save game has been retrieved");
 				toggleGame(true);
 				toggleEnterUsername(false);
-				displayGame();
+				updateGame();
 			} else {
 				System.out.println("Saved game could not be retrieved.");
 			}
 		} else {
 			game = hangmanController.getGame();
+			hangmanController.initializeHangman();
 			toggleGame(true);
 			toggleEnterUsername(false);
-			displayGame();
+			updateGame();
 		}
 
-	}
-
-	public void displayGame() {
-		txtPaneWordDisplay.setText(game.displayGuessedLetters());
-		fldNumMistakes.setText("" + game.getMistakesLeft());
-		displayWord();
 	}
 
 	public void displayCheckLetterOutput() {
@@ -317,11 +316,20 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		} else if (checkLetterOutput == 10) {
 			gameWon();
 		} else {
-			displayWord();
-			txtPaneGuessedLetters.setText(game.toString());
-			fldNumMistakes.setText("" + game.getMistakesLeft());
+			updateGame();
 		}
 	}
+	
+	public void toggleGameEnabled(boolean enable) {
+		hangmanPanel.setEnabled(enable);
+		txtFldGuess.setEnabled(enable);
+		btnGuess.setEnabled(enable);
+		btnClear.setEnabled(enable);
+		btnGuessWholeWord.setEnabled(enable);
+		txtPaneWordDisplay.setEnabled(enable);
+		btnHint.setEnabled(enable);
+	}
+	
 
 	public void gameOver() {
 		int choice = JOptionPane.showConfirmDialog(this, "You made too many mistakes!\nWould you like to play again?",
@@ -329,16 +337,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if (choice == 0) {
 			newGame();
 		} else {
-			txtPaneGuessedLetters.setText(game.toString());
-			fldNumMistakes.setText("" + game.getMistakesLeft());
-			displayWord();
-			hangmanPanel.setEnabled(false);
-			txtFldGuess.setEnabled(false);
-			btnGuess.setEnabled(false);
-			btnClear.setEnabled(false);
-			btnGuessWholeWord.setEnabled(false);
-			txtPaneWordDisplay.setEnabled(false);
-			btnHint.setEnabled(false);
+			updateGame();
+			toggleGameEnabled(false);
 		}
 	}
 	
@@ -349,16 +349,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if (choice == 0) {
 			newGame();
 		} else {
-			txtPaneGuessedLetters.setText(game.toString());
-			fldNumMistakes.setText("" + game.getMistakesLeft());
-			displayWord();
-			hangmanPanel.setEnabled(false);
-			txtFldGuess.setEnabled(false);
-			btnGuess.setEnabled(false);
-			btnClear.setEnabled(false);
-			btnGuessWholeWord.setEnabled(false);
-			txtPaneWordDisplay.setEnabled(false);
-			btnHint.setEnabled(false);
+			updateGame();
+			toggleGameEnabled(false);
 		}
 		
 		
@@ -368,14 +360,15 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if (hangmanController.initializeHangman() && hangmanController.getNewGame()) {
 			game = hangmanController.getGame();
 			toggleGame(true);
+			toggleGameEnabled(true);
 			toggleEnterUsername(false);
-			displayGame();
+			updateGame();
 		} else {
 			JOptionPane.showMessageDialog(this, "Something went wrong please try again later.");
 		}
 	}
 
-	public void displayWord() {
+	public void updateGame() {
 		String displayInterfaceLetters = "";
 		for (int i = 0; i < game.getInterfaceLetters().length(); i++) {
 			displayInterfaceLetters += game.getInterfaceLetters().charAt(i);
@@ -383,6 +376,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		}
 
 		txtPaneWordDisplay.setText(displayInterfaceLetters);
+		txtPaneGuessedLetters.setText(game.getGuessedLettersString());
+		fldNumMistakes.setText("" + game.getMistakesLeft());
 	}
 
 	public void guessWholeWord() {
@@ -410,11 +405,13 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			txtFldGuess.setText("");
 		} else if (e.getSource() == btnHint) {
 			game.giveHint();
-			displayWord();
+			updateGame();
 		} else if (e.getSource() == btnGuessWholeWord) {
 			guessWholeWord();
 		} else if (e.getSource() == mntmSaveGame) {
 			hangmanController.saveGame(game);
+		} else if (e.getSource() == mntmNewGame) {
+			newGame();
 		} else if (e.getSource() == btnEnter) {
 			enterUsername();
 		} else if (e.getSource() == btnCancelEnterUsername) {
@@ -430,14 +427,16 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	}
 
 	@Override
-	public void windowClosed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+	public void windowClosed(WindowEvent e) {
 
 	}
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+		if(hangmanController.saveGame(game))
+			System.out.println("Everything was saved");
+		else
+			System.out.println("Something could not be saved");
 
 	}
 

@@ -18,7 +18,6 @@ public class HangmanController {
 			return false;
 		} else {
 			System.out.println("Dictionary initialized");
-			System.out.println(dictionary.toString());
 			return true;
 		}
 	}
@@ -46,13 +45,23 @@ public class HangmanController {
 	public void setScoreboard(Scoreboard scoreboard) {
 		this.scoreboard = scoreboard;
 	}
+	
+	public void setCurrentPlayer(String username) {
+		scoreboard.setCurrentPlayer(username);
+	}
+	
+	public void addUser(String username) {
+		scoreboard.addUser(new User(username));
+		System.out.println("User Added");
+		System.out.println(scoreboard.getScoreboard().getLength());
+	}
 
 	public boolean isSavedGame() {
 		return game.isSavedGame();
 	}
 	
 	public String[] retrieveUserNames() {
-		return null;
+		return this.scoreboard.retrieveUserNames();
 	}
 	
 	public HangmanGame playSavedGame() {
@@ -85,9 +94,8 @@ public class HangmanController {
 		
 	}
 	
-	public void saveGame(HangmanGame game) {
-		dictionary.saveDictionary();
-		game.saveGame();
+	public boolean saveGame(HangmanGame game) {
+		return (dictionary.saveDictionary() && game.saveGame() && scoreboard.saveScoreboard());
 	}
 	
 

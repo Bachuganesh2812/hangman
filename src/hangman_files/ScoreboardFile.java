@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import hangman_logic.HangmanGame;
 import hangman_logic.Scoreboard;
-import hangman_logic.User;
-import linked_data_structures.DoublyLinkedList;
 
 public class ScoreboardFile {
 	
@@ -18,7 +15,7 @@ public class ScoreboardFile {
 	private Scoreboard scoreboard = new Scoreboard();
 	
 	
-	public boolean deserializeGame() {
+	public boolean deserializeScoreboard() {
 		
 		boolean scoreboardDeserialized = false;
 		try {

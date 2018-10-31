@@ -13,6 +13,7 @@ public class HangmanGame implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private SinglyLinkedList<Character> answerLetters = new SinglyLinkedList<Character>();
 	private SinglyLinkedList<Character> guessedLetters = new SinglyLinkedList<Character>();
+	private User user;
 	private String interfaceLetters;
 	private String answer;
 	private int mistakesLeft;
@@ -21,14 +22,23 @@ public class HangmanGame implements Serializable {
 		this.answer = null;
 		this.mistakesLeft = 6;
 		this.interfaceLetters = "";
+		this.user = new User();
 	}
 
 	public HangmanGame(String ans) {
 		this.answer = ans;
 		this.mistakesLeft = 6;
 		this.interfaceLetters = "";
+		this.user = new User();
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 	public SinglyLinkedList<Character> getAnswerLetters() {
 		return answerLetters;
 	}
@@ -72,7 +82,6 @@ public class HangmanGame implements Serializable {
 	public void initializeAnswer() {
 		for (int i = answer.length() - 1; i >= 0; i--) {
 			answerLetters.add(answer.charAt(i));
-			System.out.print(answer.charAt(i));
 			if (Character.isLetter(answer.charAt(i))) {
 				interfaceLetters += "_";
 			} else {
@@ -85,6 +94,7 @@ public class HangmanGame implements Serializable {
 		}
 
 		System.out.println();
+		System.out.println(interfaceLetters);
 
 	}
 
@@ -228,10 +238,11 @@ public class HangmanGame implements Serializable {
 		}
 	}
 	
-	public String displayGuessedLetters() {
+	public String getGuessedLettersString() {
 		String guessedLettersString = "";
 		for (int i = 0; i < guessedLetters.getLength(); i++) {
 			guessedLettersString += guessedLetters.getElementAt(i);
+			guessedLettersString += " ";
 		}
 
 		return guessedLettersString;
@@ -242,16 +253,5 @@ public class HangmanGame implements Serializable {
 		return null;
 	}
 	
-	@Override
-	public boolean equals(Object o) {
-		boolean isEqual = true;
-		if(o instanceof SinglyLinkedList<?>) {
-			for(int i = 0; i < answerLetters.getLength(); i++) {
-				if(interfaceLetters.charAt(i) != answerLetters.getElementAt(i))
-					isEqual = false;
-			}
-		}
-		return isEqual;
-	}
 
 }
