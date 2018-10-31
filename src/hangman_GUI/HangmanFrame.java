@@ -232,8 +232,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 
 		String choice = (String) JOptionPane.showInputDialog(this, dialog, title, JOptionPane.PLAIN_MESSAGE, null,
 				usernames, "  ");
-		hangmanController.setCurrentPlayer(choice);
-		playGame();
+		startGameAs(choice);
+		
 		
 	}
 
@@ -243,7 +243,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 				displayWarning(fldUsername.getText());
 			} else {
 				hangmanController.addUser(fldUsername.getText());
-				playGame();
+				newGame();
 			}
 		} else {
 			JOptionPane.showMessageDialog(this, "You must enter a username to submit.", "No Username Entered",
@@ -251,12 +251,12 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		}
 	}
 	
-	public void playGame() {
-		if(hangmanController.isSavedGame()) {
+	public void startGameAs(String username) {
+		hangmanController.findUser(username);
+		if(hangmanController.isSavedGame(username)) 
 			displayContinueSavedGame();
-		} else {
+		else
 			newGame();
-		}
 	}
 
 	public void displayWarning(String username) {
@@ -267,7 +267,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 
 		int choice = JOptionPane.showConfirmDialog(this, dialog, title, JOptionPane.YES_NO_OPTION);
 		if (choice == 0) {
-			playGame();
+			startGameAs(username);
 		} else {
 			toggleEnterUsername(true);
 		}
@@ -275,7 +275,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	}
 
 	private void displayContinueSavedGame() {
-		String dialog = "There is a saved game on file.\nDo you want to continue where the last player left off?";
+		String dialog = "You have a saved game on file.\nDo you want to continue where you left off?";
 		String title = "Saved Game Available";
 
 		int choice = JOptionPane.showConfirmDialog(this, dialog, title, JOptionPane.YES_NO_OPTION);
@@ -357,7 +357,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	}
 
 	public void newGame() {
-		if (hangmanController.initializeHangman() && hangmanController.getNewGame()) {
+		if (hangmanController.getNewGame()) {
 			game = hangmanController.getGame();
 			toggleGame(true);
 			toggleGameEnabled(true);

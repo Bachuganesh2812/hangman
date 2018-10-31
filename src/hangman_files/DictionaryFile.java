@@ -31,7 +31,6 @@ public class DictionaryFile {
 		} else if(readDictionaryFile()) {
 
 			System.out.println("Dictionary read from text file");
-			dictionary = new Dictionary();
 			dictionaryCreated = true;
 		} 
 		
@@ -50,13 +49,10 @@ public class DictionaryFile {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("File not found");
-			e.printStackTrace();
 		} catch (IOException e) {
 			System.out.println("File not found");
-			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			System.out.println("Class not found");
-			e.printStackTrace();
 		}
 		
 		

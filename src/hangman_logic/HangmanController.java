@@ -1,25 +1,35 @@
 package hangman_logic;
 
 public class HangmanController {
-	
-	HangmanGame game;
-	Dictionary dictionary;
-	Scoreboard scoreboard;
+
+	private HangmanGame game;
+	private Dictionary dictionary;
+	private Scoreboard scoreboard;
+	private User currPlayer;
 
 	public HangmanController() {
 		this.game = new HangmanGame();
 		this.dictionary = new Dictionary();
 		this.scoreboard = new Scoreboard();
+		this.currPlayer = new User();
 	}
-	
+
 	public boolean initializeHangman() {
-		if(!dictionary.initializeDictionary()) {
-			System.out.println("Dictionary not initialized");
-			return false;
-		} else {
-			System.out.println("Dictionary initialized");
-			return true;
-		}
+		if (!dictionary.initializeDictionary()) {
+				System.out.println("Dictionary not initialized");
+				return false;
+			} else {
+				System.out.println("Dictionary initialized");
+				return true;
+			}
+	}
+
+	public User getCurrPlayer() {
+		return currPlayer;
+	}
+
+	public void setCurrPlayer(User currPlayer) {
+		this.currPlayer = currPlayer;
 	}
 
 	public HangmanGame getGame() {
@@ -45,60 +55,60 @@ public class HangmanController {
 	public void setScoreboard(Scoreboard scoreboard) {
 		this.scoreboard = scoreboard;
 	}
-	
-	public void setCurrentPlayer(String username) {
-		scoreboard.setCurrentPlayer(username);
-	}
-	
+
 	public void addUser(String username) {
-		scoreboard.addUser(new User(username));
-		System.out.println("User Added");
-		System.out.println(scoreboard.getScoreboard().getLength());
+		this.currPlayer = new User(username);
+		scoreboard.addUser(currPlayer);
 	}
 
-	public boolean isSavedGame() {
-		return game.isSavedGame();
+	public void findUser(String username) {
+		this.currPlayer = scoreboard.findUser(username);
 	}
-	
+
+	public boolean isSavedGame(String username) {
+
+		return game.isSavedGame(username);
+	}
+
 	public String[] retrieveUserNames() {
 		return this.scoreboard.retrieveUserNames();
 	}
-	
+
 	public HangmanGame playSavedGame() {
-		
-		
+
 		return null;
 	}
-	
+
 	public boolean isScoreboard() {
 		return this.scoreboard.retrieveScoreboard();
 	}
-	
+
 	public boolean checkIfUsernameIsTaken(String userName) {
 		return false;
 	}
-	
+
 	public boolean getNewGame() {
-		String word = dictionary.getRandomWord();
-		if(word == null) {
-			return false;
-		} else {
-			this.game = new HangmanGame(word);
-			game.initializeAnswer();
-			return true;
+		if (initializeHangman()) {
+			String word = dictionary.getRandomWord();
+			if (word == null) {
+				return false;
+			} else {
+				this.game = new HangmanGame(word, currPlayer);
+				game.initializeAnswer();
+				return true;
+			}
 		}
+
+		return false;
 	}
 
 	public void lose() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public boolean saveGame(HangmanGame game) {
 		return (dictionary.saveDictionary() && game.saveGame() && scoreboard.saveScoreboard());
 	}
-	
 
-	
 }
-

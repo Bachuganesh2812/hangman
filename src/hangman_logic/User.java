@@ -7,35 +7,24 @@ public class User implements Serializable{
 	private String username;
 	private int totalWins;
 	private int totalGames;
-	private boolean gameInProgress;
-	
-	public boolean isGameInProgress() {
-		return gameInProgress;
-	}
 
-	public void setGameInProgress(boolean gameInProgress) {
-		this.gameInProgress = gameInProgress;
-	}
 
 	public User() {
 		this.username = null;
 		this.totalWins = 0;
 		this.totalGames = 0;
-		this.gameInProgress = false;
 	}
 	
 	public User(String uName) {
 		this.username = uName;
 		this.totalWins = 0;
 		this.totalGames = 1;
-		this.gameInProgress = true;
 	}
 	
 	public User(String uName, int wins, int games, boolean inProg) {
 		this.username = uName;
 		this.totalWins = wins;
 		this.totalGames = games;
-		this.gameInProgress = inProg;
 	};
 	
 	public String getUsername() {

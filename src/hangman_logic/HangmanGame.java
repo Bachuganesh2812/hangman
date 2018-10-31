@@ -25,11 +25,11 @@ public class HangmanGame implements Serializable {
 		this.user = new User();
 	}
 
-	public HangmanGame(String ans) {
+	public HangmanGame(String ans, User user) {
 		this.answer = ans;
 		this.mistakesLeft = 6;
 		this.interfaceLetters = "";
-		this.user = new User();
+		this.user = user;
 	}
 
 	public User getUser() {
@@ -99,6 +99,7 @@ public class HangmanGame implements Serializable {
 	}
 
 	public int checkLetter(String letter) {
+		letter = letter.toLowerCase();
 		if (validateLetter(letter)) {
 			char let = letter.charAt(0);
 			for (int i = 0; i < guessedLetters.getLength(); i++) {
@@ -142,7 +143,7 @@ public class HangmanGame implements Serializable {
 	private boolean checkForMatchingLetter(char letter) {
 		boolean foundMatch = false;
 		for (int i = 0; i < answerLetters.getLength(); i++) {
-			if (letter == answerLetters.getElementAt(i)) {
+			if (letter == Character.toLowerCase(answerLetters.getElementAt(i))) {
 				String temp = interfaceLetters.substring(0, i);
 				temp += letter;
 				interfaceLetters = temp + interfaceLetters.substring(i + 1);
@@ -211,9 +212,10 @@ public class HangmanGame implements Serializable {
 			return null;
 	}
 	
-	public boolean isSavedGame() {
+	public boolean isSavedGame(String username) {
 		GameFile file = new GameFile();
-		return file.deserializeGame();
+		User tempUser = new User(username);
+		return (file.deserializeGame() && file.getGame().getUser().equals(tempUser));
 	}
 
 	public boolean startGame() {
