@@ -1,6 +1,7 @@
 package hangman_logic;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import hangman_files.GameFile;
 import linked_data_structures.SinglyLinkedList;
@@ -14,21 +15,29 @@ public class HangmanGame implements Serializable {
 	private SinglyLinkedList<Character> answerLetters = new SinglyLinkedList<Character>();
 	private SinglyLinkedList<Character> guessedLetters = new SinglyLinkedList<Character>();
 	private User user;
-	private String interfaceLetters;
 	private String answer;
 	private int mistakesLeft;
+	private char[] interfaceLetters;
+	private boolean gameDone = false;
 
 	public HangmanGame() {
 		this.answer = null;
 		this.mistakesLeft = 6;
-		this.interfaceLetters = "";
+		this.interfaceLetters = null;
 		this.user = new User();
+	}
+	
+	public HangmanGame(User user) {
+		this.answer = null;
+		this.mistakesLeft = 6;
+		this.interfaceLetters = null;
+		this.user = user;
 	}
 
 	public HangmanGame(String ans, User user) {
 		this.answer = ans;
 		this.mistakesLeft = 6;
-		this.interfaceLetters = "";
+		this.interfaceLetters = null;
 		this.user = user;
 	}
 
@@ -47,11 +56,11 @@ public class HangmanGame implements Serializable {
 		this.answerLetters = answer;
 	}
 
-	public String getInterfaceLetters() {
+	public char[] getInterfaceLetters() {
 		return interfaceLetters;
 	}
 
-	public void setInterfaceLetters(String interfaceLetters) {
+	public void setInterfaceLetters(char[] interfaceLetters) {
 		this.interfaceLetters = interfaceLetters;
 	}
 
@@ -78,14 +87,25 @@ public class HangmanGame implements Serializable {
 	public void setAnswer(String answer) {
 		this.answer = answer;
 	}
+	
+	public String getInterfaceLettersString() {
+		String interfaceLettersStr = "";
+		for(char letter : interfaceLetters) {
+			interfaceLettersStr += letter;
+			interfaceLettersStr += " ";
+		}
+		
+		return interfaceLettersStr;
+	}
 
 	public void initializeAnswer() {
+		interfaceLetters = new char[answer.length()];
 		for (int i = answer.length() - 1; i >= 0; i--) {
 			answerLetters.add(answer.charAt(i));
 			if (Character.isLetter(answer.charAt(i))) {
-				interfaceLetters += "_";
+				interfaceLetters[i] = '_';
 			} else {
-				interfaceLetters += answer.charAt(i);
+				interfaceLetters[i] = answer.charAt(i);
 			}
 		}
 
@@ -94,12 +114,10 @@ public class HangmanGame implements Serializable {
 		}
 
 		System.out.println();
-		System.out.println(interfaceLetters);
 
 	}
 
 	public int checkLetter(String letter) {
-		letter = letter.toLowerCase();
 		if (validateLetter(letter)) {
 			char let = letter.charAt(0);
 			for (int i = 0; i < guessedLetters.getLength(); i++) {
@@ -133,7 +151,7 @@ public class HangmanGame implements Serializable {
 		boolean isEqual = true;
 		
 		for(int i = 0; i < answerLetters.getLength(); i++) {
-			if(interfaceLetters.charAt(i) != answerLetters.getElementAt(i))
+			if(interfaceLetters[i] != answerLetters.getElementAt(i))
 				isEqual = false;
 		}
 		
@@ -143,10 +161,9 @@ public class HangmanGame implements Serializable {
 	private boolean checkForMatchingLetter(char letter) {
 		boolean foundMatch = false;
 		for (int i = 0; i < answerLetters.getLength(); i++) {
-			if (letter == Character.toLowerCase(answerLetters.getElementAt(i))) {
-				String temp = interfaceLetters.substring(0, i);
-				temp += letter;
-				interfaceLetters = temp + interfaceLetters.substring(i + 1);
+			if (Character.toLowerCase(letter) == Character.toLowerCase(answerLetters.getElementAt(i))) {
+				System.out.println(letter);
+				interfaceLetters[i] = answerLetters.getElementAt(i);
 				foundMatch = true;
 			}
 		}
@@ -221,22 +238,24 @@ public class HangmanGame implements Serializable {
 	public boolean startGame() {
 		return false;
 	}
+	
+	
 
-	public boolean giveHint() {
+	public int giveHint() {
 		for (int i = 0; i < answerLetters.getLength(); i++) {
-			if (!interfaceLetters.contains(answerLetters.getElementAt(i).toString())) {
+			if(interfaceLetters[i] != answerLetters.getElementAt(i)) {
 				checkForMatchingLetter(answerLetters.getElementAt(i));
-				return true;
+				if(checkForWin())
+					return 10;
+				return 1;
 			}
 		}
-		return false;
+		return -1;
 	}
 
 	private void unmaskWholeWord() {
 		for (int i = 0; i < answerLetters.getLength(); i++) {
-			if (!interfaceLetters.contains(answerLetters.getElementAt(i).toString())) {
-				checkForMatchingLetter(answerLetters.getElementAt(i));
-			}
+			interfaceLetters[i] = answerLetters.getElementAt(i);
 		}
 	}
 	

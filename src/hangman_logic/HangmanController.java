@@ -6,6 +6,7 @@ public class HangmanController {
 	private Dictionary dictionary;
 	private Scoreboard scoreboard;
 	private User currPlayer;
+	private boolean gameInProgress = false;
 
 	public HangmanController() {
 		this.game = new HangmanGame();
@@ -14,14 +15,19 @@ public class HangmanController {
 		this.currPlayer = new User();
 	}
 
-	public boolean initializeHangman() {
-		if (!dictionary.initializeDictionary()) {
-				System.out.println("Dictionary not initialized");
-				return false;
-			} else {
-				System.out.println("Dictionary initialized");
-				return true;
-			}
+	public int initializeDictionary() {
+		if (gameInProgress) {
+			return 1;
+		} else if (!dictionary.initializeDictionary()) {
+			System.out.println("Dictionary not initialized");
+			return -1;
+		} else if (dictionary.getDictionary().getLength() == 0) {
+			return -2;
+		} else {
+			gameInProgress = true;
+			System.out.println("Dictionary initialized");
+			return 1;
+		}
 	}
 
 	public User getCurrPlayer() {
@@ -66,7 +72,6 @@ public class HangmanController {
 	}
 
 	public boolean isSavedGame(String username) {
-
 		return game.isSavedGame(username);
 	}
 
@@ -74,9 +79,10 @@ public class HangmanController {
 		return this.scoreboard.retrieveUserNames();
 	}
 
-	public HangmanGame playSavedGame() {
-
-		return null;
+	public boolean retrieveSavedGame() {
+		game = new HangmanGame();
+		game = game.retrieveSavedGame();
+		return (game != null);
 	}
 
 	public boolean isScoreboard() {
