@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class User implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String username;
 	private int totalWins;
 	private int totalGames;
@@ -13,23 +17,23 @@ public class User implements Serializable{
 		this.username = null;
 		this.totalWins = 0;
 		this.totalGames = 0;
-	}
+	}//User()
 	
 	public User(String uName) {
 		this.username = uName;
 		this.totalWins = 0;
-		this.totalGames = 1;
-	}
+		this.totalGames = 0;
+	}//User(String)
 	
 	public User(String uName, int wins, int games, boolean inProg) {
 		this.username = uName;
 		this.totalWins = wins;
 		this.totalGames = games;
-	};
+	}//User(String, int, int, boolean)
 	
 	public String getUsername() {
 		return username;
-	}
+	}// String getUsername()
 
 	public void setUsername(String username) {
 		this.username = username;

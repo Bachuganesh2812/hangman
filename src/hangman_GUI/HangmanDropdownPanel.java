@@ -17,6 +17,10 @@ public class HangmanDropdownPanel extends JPanel implements ActionListener{
 	private JButton btnCancel;
 	private HangmanFrame frame;
 	
+	public HangmanDropdownPanel() {
+		
+	}
+	
 	public HangmanDropdownPanel(HangmanFrame mainFrame) {
 		setLayout(null);
 

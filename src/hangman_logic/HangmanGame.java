@@ -142,6 +142,7 @@ public class HangmanGame implements Serializable {
 				return -10;
 			} else if(checkForWin()) {
 				gameDone = true;
+				user.setTotalWins(user.getTotalWins() + 1);
 				return 10;
 			}
 
@@ -255,6 +256,7 @@ public class HangmanGame implements Serializable {
 			if(interfaceLetters[i] != answerLetters.getElementAt(i)) {
 				checkForMatchingLetter(answerLetters.getElementAt(i));
 				if(checkForWin()) {
+					user.setTotalWins(user.getTotalWins() + 1);
 					gameDone = true;
 					return 10;
 				}

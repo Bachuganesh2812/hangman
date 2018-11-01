@@ -22,7 +22,6 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.JPanel;
 
 public class HangmanFrame extends JFrame implements ActionListener, WindowListener {
 
@@ -47,12 +46,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	private JMenuItem mntmSaveGame;
 	private JMenuItem mntmNewGame;
 	private JMenuItem mntmQuit;
-
-	private JTextField fldUsername;
-	private JButton btnEnter;
-	private JButton btnCancelEnterUsername;
-	private JLabel lblEnterUsername;
-	private JLabel lblEnterUsernameCancel;
+	
+	private HangmanEnterUsernamePanel enterUsernamePanel;
 	private int initializeDictionaryOutput;
 	
 	private HangmanDropdownPanel dropDownPanel;
@@ -147,38 +142,20 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		btnHint = new JButton("Give Hint");
 		btnHint.setBounds(420, 258, 160, 23);
 		getContentPane().add(btnHint);
-
-		fldUsername = new JTextField();
-		fldUsername.setBounds(225, 179, 185, 20);
-		getContentPane().add(fldUsername);
-		fldUsername.setColumns(10);
-
-		btnEnter = new JButton("Enter");
-		btnEnter.setBounds(225, 210, 89, 23);
-		getContentPane().add(btnEnter);
-		btnEnter.addActionListener(this);
-
-		btnCancelEnterUsername = new JButton("Cancel");
-		btnCancelEnterUsername.setBounds(324, 210, 89, 23);
-		getContentPane().add(btnCancelEnterUsername);
-		btnCancelEnterUsername.addActionListener(this);
-
-		lblEnterUsername = new JLabel("Enter a unique Username:");
-		lblEnterUsername.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblEnterUsername.setBounds(225, 145, 180, 23);
-		getContentPane().add(lblEnterUsername);
-
-		lblEnterUsernameCancel = new JLabel("Press cancel to select a username from a drop down list.");
-		lblEnterUsernameCancel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEnterUsernameCancel.setBounds(132, 244, 370, 23);
-		getContentPane().add(lblEnterUsernameCancel);
 		
 		btnHint.addActionListener(this);
+		
+		enterUsernamePanel = new HangmanEnterUsernamePanel();
+		enterUsernamePanel.setVisible(false);	
+		enterUsernamePanel.setBounds(173, 56, 394, 269);
+		enterUsernamePanel.setFrame(this);
+		getContentPane().add(enterUsernamePanel);
 		
 		dropDownPanel = new HangmanDropdownPanel(this);
 		dropDownPanel.setVisible(false);
 		dropDownPanel.setBounds(184, 56, 384, 269);
 		getContentPane().add(dropDownPanel);
+		
 	}
 
 	public static void main(String[] args) {
@@ -188,7 +165,6 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		frame.toggleGame(false);
-		frame.toggleEnterUsername(false);
 		frame.start();
 	}
 
@@ -207,14 +183,6 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		lblMistakesLeft.setVisible(show);
 		mntmSaveGame.setEnabled(show);
 		mntmNewGame.setEnabled(show);
-	}
-
-	public void toggleEnterUsername(boolean show) {
-		fldUsername.setVisible(show);
-		btnEnter.setVisible(show);
-		btnCancelEnterUsername.setVisible(show);
-		lblEnterUsername.setVisible(show);
-		lblEnterUsernameCancel.setVisible(show);
 	}
 
 	public void start() {
@@ -256,25 +224,10 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 
 	public void displayEnterUsername() {
 		if (initializeDictionaryOutput == 1) {
-			toggleEnterUsername(true);
+			enterUsernamePanel.setVisible(true);
 		} else
 			JOptionPane.showMessageDialog(this, "Sorry there are no more words left!", "Out of Words To Play",
 					JOptionPane.ERROR_MESSAGE);
-	}
-
-	public void enterUsername() {
-		if (!fldUsername.getText().isEmpty()) {
-			if (hangmanController.checkIfUsernameIsTaken(fldUsername.getText())) {
-				displayWarning(fldUsername.getText());
-			} else {
-				hangmanController.addUser(fldUsername.getText());
-				addWindowListener(this);
-				newGame();
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "You must enter a username to submit.", "No Username Entered",
-					JOptionPane.ERROR_MESSAGE);
-		}
 	}
 
 	public void startGameAs(String username) {
@@ -286,12 +239,23 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			newGame();
 	}
 
-	public void displayWelcome() {
-
+	public void enterUsername(String username) {
+		if (!username.isEmpty()) {
+			if (hangmanController.getScoreboard().findUser(username) != null) {
+				displayWarning(username);
+			} else {
+				hangmanController.addUser(username);
+				addWindowListener(this);
+				newGame();
+			}
+		} else {
+			JOptionPane.showMessageDialog(this, "You must enter a username to submit.", "No Username Entered",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public void displayWarning(String username) {
-		toggleEnterUsername(false);
+		enterUsernamePanel.setVisible(false);
 		String dialog = "The username: " + username + " is already taken.\nDo you want to continue as " + username
 				+ "?\n";
 		String title = "Username Taken";
@@ -300,7 +264,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		if (choice == 0) {
 			startGameAs(username);
 		} else {
-			toggleEnterUsername(true);
+			enterUsernamePanel.setVisible(true);
 		}
 
 	}
@@ -316,7 +280,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 				hangmanController.initializeDictionary();
 				System.out.println("Save game has been retrieved");
 				toggleGame(true);
-				toggleEnterUsername(false);
+				enterUsernamePanel.setVisible(false);
 				updateGame();
 			} else {
 				JOptionPane.showMessageDialog(this,
@@ -325,12 +289,6 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			}
 		} else {
 			newGame();
-//			hangmanController.getNewGame();
-//			game = hangmanController.getGame();
-//			hangmanController.initializeDictionary();
-//			toggleGame(true);
-//			toggleEnterUsername(false);
-//			updateGame();
 		}
 
 	}
@@ -393,7 +351,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			game = hangmanController.getGame();
 			toggleGame(true);
 			toggleGameEnabled(true);
-			toggleEnterUsername(false);
+			enterUsernamePanel.setVisible(false);
 			updateGame();
 		} else {
 			toggleGameEnabled(false);
@@ -425,6 +383,16 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			}
 		}
 	}
+	
+	public void displayScoreboard() {
+		HangmanScoreboardFrame scoreboardFrame = new HangmanScoreboardFrame();
+		scoreboardFrame.setVisible(true);
+		scoreboardFrame.setSize(630, 370);
+		scoreboardFrame.setLocationRelativeTo(null);
+		scoreboardFrame.setVisible(true);
+		scoreboardFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		scoreboardFrame.printScores(hangmanController.getScoreboard().getScoreboard());
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -442,13 +410,12 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			hangmanController.saveGame(game);
 		} else if (e.getSource() == mntmNewGame) {
 			newGame();
-		} else if (e.getSource() == btnEnter) {
-			enterUsername();
-		} else if (e.getSource() == btnCancelEnterUsername) {
-			displayUserDropDown();
+		} else if (e.getSource() == mntmScoreboard) {
+			displayScoreboard();
 		}
-
 	}
+	
+	
 
 	@Override
 	public void windowActivated(WindowEvent arg0) {
