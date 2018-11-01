@@ -17,6 +17,8 @@ public class HangmanController {
 
 	public int initializeDictionary() {
 		if (gameInProgress) {
+			System.out.println("Game in progress: ");
+			System.out.println(dictionary.toString());
 			return 1;
 		} else if (!dictionary.initializeDictionary()) {
 			System.out.println("Dictionary not initialized");
@@ -26,6 +28,9 @@ public class HangmanController {
 		} else {
 			gameInProgress = true;
 			System.out.println("Dictionary initialized");
+			
+			System.out.println("Game in progress: ");
+			System.out.println(dictionary.toString());
 			return 1;
 		}
 	}
@@ -94,7 +99,7 @@ public class HangmanController {
 	}
 
 	public boolean getNewGame() {
-		if (initializeHangman()) {
+		if (initializeDictionary() == 1) {
 			String word = dictionary.getRandomWord();
 			if (word == null) {
 				return false;

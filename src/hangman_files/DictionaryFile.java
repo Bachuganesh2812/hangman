@@ -14,7 +14,7 @@ import linked_data_structures.SinglyLinkedList;
 
 public class DictionaryFile {
 	
-	private static final String FILE_NAME_STATIC = "testDictionary.txt";
+	private static final String FILE_NAME_STATIC = "dictionary.txt";
 	private static final String FILE_NAME_SERIALIZED = "dictionary.ser";
 	private SinglyLinkedList<String> dictionaryList;
 	private Dictionary dictionary = new Dictionary();

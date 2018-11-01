@@ -1,7 +1,6 @@
 package hangman_logic;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 import hangman_files.GameFile;
 import linked_data_structures.SinglyLinkedList;
@@ -41,6 +40,14 @@ public class HangmanGame implements Serializable {
 		this.user = user;
 	}
 
+	public boolean isGameDone() {
+		return gameDone;
+	}
+
+	public void setGameDone(boolean gameDone) {
+		this.gameDone = gameDone;
+	}
+	
 	public User getUser() {
 		return user;
 	}
@@ -130,9 +137,11 @@ public class HangmanGame implements Serializable {
 			}
 
 			if (checkForLose()) {
+				gameDone = true;
 				unmaskWholeWord();
 				return -10;
 			} else if(checkForWin()) {
+				gameDone = true;
 				return 10;
 			}
 
@@ -245,8 +254,10 @@ public class HangmanGame implements Serializable {
 		for (int i = 0; i < answerLetters.getLength(); i++) {
 			if(interfaceLetters[i] != answerLetters.getElementAt(i)) {
 				checkForMatchingLetter(answerLetters.getElementAt(i));
-				if(checkForWin())
+				if(checkForWin()) {
+					gameDone = true;
 					return 10;
+				}
 				return 1;
 			}
 		}

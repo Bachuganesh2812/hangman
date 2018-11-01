@@ -22,12 +22,10 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.JPanel;
 
 public class HangmanFrame extends JFrame implements ActionListener, WindowListener {
 
-	/**
-	 * WORDS WITH SPACES DON'T WORK
-	 */
 	private static final long serialVersionUID = 1L;
 	private HangmanController hangmanController;
 	private HangmanGame game;
@@ -55,6 +53,9 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	private JButton btnCancelEnterUsername;
 	private JLabel lblEnterUsername;
 	private JLabel lblEnterUsernameCancel;
+	private int initializeDictionaryOutput;
+	
+	private HangmanDropdownPanel dropDownPanel;
 
 	public HangmanFrame() throws HeadlessException {
 		setTitle("Hangman");
@@ -171,7 +172,13 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		lblEnterUsernameCancel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEnterUsernameCancel.setBounds(132, 244, 370, 23);
 		getContentPane().add(lblEnterUsernameCancel);
+		
 		btnHint.addActionListener(this);
+		
+		dropDownPanel = new HangmanDropdownPanel(this);
+		dropDownPanel.setVisible(false);
+		dropDownPanel.setBounds(184, 56, 384, 269);
+		getContentPane().add(dropDownPanel);
 	}
 
 	public static void main(String[] args) {
@@ -212,39 +219,47 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 
 	public void start() {
 		hangmanController = new HangmanController();
-		int initializeDictionaryOutput = hangmanController.initializeDictionary();
-		if (initializeDictionaryOutput == 1) {
-			addWindowListener(this);
-			if (hangmanController.isScoreboard()) {
-				int choice = JOptionPane.showConfirmDialog(this, "Have you played Hangman before?", "Start",
-						JOptionPane.YES_NO_OPTION);
-				if (choice == 0) {
-					displayUserDropDown();
-				} else {
-					toggleEnterUsername(true);
-				}
-			} else
-				toggleEnterUsername(true);
-		} else if (initializeDictionaryOutput == -1) {
-			JOptionPane.showMessageDialog(this, "Sorry the game cannot be played at this time!", "Broken Hangman",
-					JOptionPane.ERROR_MESSAGE);
-		} else {
-			/// no words but saved game in progress?!?!?
-			JOptionPane.showMessageDialog(this, "Sorry there are no more words left!", "Out of Words To Play",
-					JOptionPane.ERROR_MESSAGE);
-		}
+		initializeDictionaryOutput = hangmanController.initializeDictionary();
+
+		if (hangmanController.isScoreboard()) {
+			int choice = JOptionPane.showConfirmDialog(this, "Have you played Hangman before?", "Start",
+					JOptionPane.YES_NO_OPTION);
+			if (choice == 0) {
+				displayUserDropDown();
+			} else {
+				displayEnterUsername();
+			}
+		} else
+			displayEnterUsername();
+
+		// if (initializeDictionaryOutput == -1) {
+		// JOptionPane.showMessageDialog(this, "Sorry the game cannot be played at this
+		// time!", "Broken Hangman",
+		// JOptionPane.ERROR_MESSAGE);
+		// } else {
+		// /// no words but saved game in progress?!?!?
+		// JOptionPane.showMessageDialog(this, "Sorry there are no more words left!",
+		// "Out of Words To Play",
+		// JOptionPane.ERROR_MESSAGE);
+		// }
 
 	}
 
 	public void displayUserDropDown() {
 		String[] usernames = hangmanController.retrieveUserNames();
-		String dialog = "Select your username.\nDon't see your username?\nClick cancel to enter it.";
-		String title = "Select your username";
+		dropDownPanel.setUsernames(usernames);
+		dropDownPanel.setVisible(true);
 
-		String choice = (String) JOptionPane.showInputDialog(this, dialog, title, JOptionPane.PLAIN_MESSAGE, null,
-				usernames, "  ");
-		startGameAs(choice);
+//		String choice = (String) JOptionPane.showInputDialog(this, dialog, title, JOptionPane.PLAIN_MESSAGE, null,
+//				usernames, "  ");
+	}
 
+	public void displayEnterUsername() {
+		if (initializeDictionaryOutput == 1) {
+			toggleEnterUsername(true);
+		} else
+			JOptionPane.showMessageDialog(this, "Sorry there are no more words left!", "Out of Words To Play",
+					JOptionPane.ERROR_MESSAGE);
 	}
 
 	public void enterUsername() {
@@ -253,6 +268,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 				displayWarning(fldUsername.getText());
 			} else {
 				hangmanController.addUser(fldUsername.getText());
+				addWindowListener(this);
 				newGame();
 			}
 		} else {
@@ -262,11 +278,16 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	}
 
 	public void startGameAs(String username) {
+		addWindowListener(this);
 		hangmanController.findUser(username);
 		if (hangmanController.isSavedGame(username))
 			displayContinueSavedGame();
 		else
 			newGame();
+	}
+
+	public void displayWelcome() {
+
 	}
 
 	public void displayWarning(String username) {
@@ -290,25 +311,26 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 
 		int choice = JOptionPane.showConfirmDialog(this, dialog, title, JOptionPane.YES_NO_OPTION);
 		if (choice == 0) {
-
-			// checkForWIN!?!?!
-			if (hangmanController.retrieveSavedGame()) {
+			if (hangmanController.retrieveSavedGame() && !hangmanController.getGame().isGameDone()) {
 				game = hangmanController.getGame();
-				hangmanController.initializeHangman();
+				hangmanController.initializeDictionary();
 				System.out.println("Save game has been retrieved");
 				toggleGame(true);
 				toggleEnterUsername(false);
 				updateGame();
 			} else {
-				System.out.println("Saved game could not be retrieved.");
+				JOptionPane.showMessageDialog(this,
+						"Your saved game is finished! A new game will be started for you.");
+				newGame();
 			}
 		} else {
-			hangmanController.getNewGame();
-			game = hangmanController.getGame();
-			hangmanController.initializeHangman();
-			toggleGame(true);
-			toggleEnterUsername(false);
-			updateGame();
+			newGame();
+//			hangmanController.getNewGame();
+//			game = hangmanController.getGame();
+//			hangmanController.initializeDictionary();
+//			toggleGame(true);
+//			toggleEnterUsername(false);
+//			updateGame();
 		}
 
 	}

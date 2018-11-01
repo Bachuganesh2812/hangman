@@ -7,16 +7,21 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class HangmanDropdownPanel extends JPanel {
+public class HangmanDropdownPanel extends JPanel implements ActionListener{
 
-	public HangmanDropdownPanel() {
+	private static final long serialVersionUID = 1L;
+	private JComboBox<String> cmBxUsernames;
+	private JButton btnSubmit;
+	private JButton btnCancel;
+	private HangmanFrame frame;
+	
+	public HangmanDropdownPanel(HangmanFrame mainFrame) {
 		setLayout(null);
 
-		JComboBox<String> cmBxUsernames = new JComboBox<String>();
-		cmBxUsernames.setBounds(77, 107, 153, 20);
+		cmBxUsernames = new JComboBox<String>();
+		cmBxUsernames.setBounds(51, 107, 192, 20);
 		add(cmBxUsernames);
 
 		JLabel lblSelectYourUsername = new JLabel("Select your username:");
@@ -24,27 +29,46 @@ public class HangmanDropdownPanel extends JPanel {
 		lblSelectYourUsername.setBounds(77, 69, 166, 27);
 		add(lblSelectYourUsername);
 
-		JButton btnSubmit = new JButton("Submit");
-		btnSubmit.setBounds(76, 137, 71, 23);
+		btnSubmit = new JButton("Submit");
+		btnSubmit.setBounds(51, 138, 90, 23);
 		add(btnSubmit);
+		btnSubmit.addActionListener(this);
 
-		JButton btnNewButton = new JButton("Cancel");
-		btnNewButton.setToolTipText("Don't see your username? Select here to enter.");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnNewButton.setBounds(157, 138, 73, 23);
-		add(btnNewButton);
-		// TODO Auto-generated constructor stub
+		btnCancel = new JButton("Cancel");
+		btnCancel.setToolTipText("Don't see your username? Select here to enter.");
+		btnCancel.addActionListener(this);
+		btnCancel.setBounds(153, 138, 90, 23);
+		add(btnCancel);
+		
+		JLabel lblNoUsername = new JLabel("Don't see your username? Press cancel.");
+		lblNoUsername.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblNoUsername.setBounds(36, 171, 240, 27);
+		add(lblNoUsername);
+		
+		frame = mainFrame;
 	}// HangmanUserNameDropDownPanel()
 
 	public String getUserName() {
 		return null;
 	}// getUserName()
 
-	public void retrieveUserNames() {
-
+	public void setUsernames(String[] usernames) {
+		for(String username : usernames) {
+			cmBxUsernames.addItem(username);
+		}
 	}// retrieveUserNames()
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == btnSubmit) {
+			frame.startGameAs(cmBxUsernames.getSelectedItem().toString());
+			this.setVisible(false);
+			frame.toggleGame(true);
+		} else if(e.getSource() == btnCancel) {
+			this.setVisible(false);
+			frame.displayEnterUsername();
+		}
+		
+	}
 
 }// HangmanUserNameDropDownPanel class
