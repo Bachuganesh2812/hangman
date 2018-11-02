@@ -12,33 +12,41 @@ import java.util.Scanner;
 import hangman_logic.Dictionary;
 import linked_data_structures.SinglyLinkedList;
 
+/*
+ *       Title: DictionaryFile
+ * Description: File Handler for the Dictionary class
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
 public class DictionaryFile {
-	
+
 	private static final String FILE_NAME_STATIC = "dictionary.txt";
 	private static final String FILE_NAME_SERIALIZED = "dictionary.ser";
 	private SinglyLinkedList<String> dictionaryList;
-	private Dictionary dictionary = new Dictionary();
+	private Dictionary dictionary;
 
 	public DictionaryFile() {
-	}
-	
+		dictionary = new Dictionary();
+	}// DictionaryFile()
+
 	public boolean readDictionary() {
 		boolean dictionaryCreated = false;
-		
-		if(deserializeDictionary()) {
+
+		if (deserializeDictionary()) {
 			System.out.println("Dictionary deserialized");
 			dictionaryCreated = true;
-		} else if(readDictionaryFile()) {
+		} else if (readDictionaryFile()) {
 
 			System.out.println("Dictionary read from text file");
 			dictionaryCreated = true;
-		} 
-		
+		}
+
 		return dictionaryCreated;
-	}
-	
+	}// readDictionary()
+
 	private boolean deserializeDictionary() {
-		
+
 		boolean dictionaryDeserialized = false;
 		try {
 			FileInputStream inStream = new FileInputStream(FILE_NAME_SERIALIZED);
@@ -47,18 +55,16 @@ public class DictionaryFile {
 			dictionaryDeserialized = true;
 			objectInputFile.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			System.out.println("File not found");
 		} catch (IOException e) {
 			System.out.println("File not found");
 		} catch (ClassNotFoundException e) {
 			System.out.println("Class not found");
 		}
-		
-		
+
 		return dictionaryDeserialized;
-	}
-	
+	}// deserializeDictionary()
+
 	private boolean readDictionaryFile() {
 		File dictionaryFile = new File(FILE_NAME_STATIC);
 		Scanner in = null;
@@ -70,25 +76,25 @@ public class DictionaryFile {
 			System.out.println(e.getMessage());
 			return false;
 		}
-		
-		while(in.hasNext()) {
+
+		while (in.hasNext()) {
 			dictionaryList.add(in.nextLine());
 		}
-		
+
 		in.close();
-		
-		if(dictionaryList.getLength() == 0) {
+
+		if (dictionaryList.getLength() == 0) {
 			return false;
 		}
-		
+
 		dictionary.setDictionary(dictionaryList);
 		return true;
-	}
-	
+	}// readDictionaryFile()
+
 	public boolean saveDictionary(Dictionary dictionary) {
-		
+
 		boolean dictionarySerialized = false;
-		
+
 		try {
 			FileOutputStream outStream = new FileOutputStream(FILE_NAME_SERIALIZED);
 			ObjectOutputStream outputFile = new ObjectOutputStream(outStream);
@@ -99,12 +105,13 @@ public class DictionaryFile {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
 
 		return dictionarySerialized;
-	}
-	
+	}// saveDictionary(Dictionary)
+
 	public Dictionary getDictionary() {
 		return dictionary;
-	}
-}
+	}// getDictionary()
+
+}// DictionaryFile()

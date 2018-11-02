@@ -1,26 +1,32 @@
 package hangman_GUI;
 
 import java.awt.Font;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class HangmanEnterUsernamePanel extends JPanel implements ActionListener{
-	
+/*
+ *       Title: HangmanEnterUsernamePanel
+ * Description: Custom JPanel to allow the player to enter a new username
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
+public class HangmanEnterUsernamePanel extends JPanel implements ActionListener {
+
+	private static final long serialVersionUID = 1L;
 	private JTextField fldUsername;
 	private JButton btnEnter;
 	private JButton btnCancelEnterUsername;
 	private JLabel lblEnterUsername;
 	private JLabel lblEnterUsernameCancel;
 	private HangmanFrame frame;
-	
+
 	public HangmanEnterUsernamePanel() {
 		setLayout(null);
 
@@ -48,14 +54,12 @@ public class HangmanEnterUsernamePanel extends JPanel implements ActionListener{
 		lblEnterUsernameCancel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEnterUsernameCancel.setBounds(0, 166, 370, 23);
 		add(lblEnterUsernameCancel);
-		
 
-	}
-	
+	}// HangmanEnterUsernamePanel()
+
 	public void setFrame(HangmanFrame frame) {
 		this.frame = frame;
-	}
-
+	}// setFrame()
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -64,6 +68,6 @@ public class HangmanEnterUsernamePanel extends JPanel implements ActionListener{
 		} else if (e.getSource() == btnCancelEnterUsername) {
 			frame.displayUserDropDown();
 		}
-	}
+	}// actionPerformed(ActionEvent)
 
-}
+}// HangmanEnterUsername class

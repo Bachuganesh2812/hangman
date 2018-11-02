@@ -8,20 +8,23 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-import java.awt.Component;
 
-public class HangmanDropdownPanel extends JPanel implements ActionListener{
+/*
+ *       Title: HangmanDropdownPanel
+ * Description: Custom JPanel to allow for selecting from the users that are saved
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
+
+public class HangmanDropdownPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> cmBxUsernames;
 	private JButton btnSubmit;
 	private JButton btnCancel;
 	private HangmanFrame frame;
-	
+
 	public HangmanDropdownPanel() {
 		setLayout(null);
 
@@ -44,42 +47,41 @@ public class HangmanDropdownPanel extends JPanel implements ActionListener{
 		btnCancel.addActionListener(this);
 		btnCancel.setBounds(153, 138, 90, 23);
 		add(btnCancel);
-		
+
 		JLabel lblNoUsername = new JLabel("Don't see your username? Press cancel.");
 		lblNoUsername.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblNoUsername.setBounds(36, 171, 240, 27);
 		add(lblNoUsername);
-		
+
 	}// HangmanUserNameDropDownPanel()
 
 	public void setFrame(HangmanFrame frame) {
 		this.frame = frame;
 	}
-	
+
 	public String getUserName() {
 		return null;
 	}// getUserName()
 
 	public void setUsernames(String[] usernames) {
-		for(String username : usernames) {
+		for (String username : usernames) {
 			cmBxUsernames.addItem(username);
 		}
 	}// retrieveUserNames()
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == btnSubmit) {
+		if (e.getSource() == btnSubmit) {
 			submit();
-		} else if(e.getSource() == btnCancel) {
+		} else if (e.getSource() == btnCancel) {
 			this.setVisible(false);
 			frame.displayEnterUsername();
-		}	
-	}//actionPerformed(ActionEvent)
-
+		}
+	}// actionPerformed(ActionEvent)
 
 	public void submit() {
 		frame.startGameAs(cmBxUsernames.getSelectedItem().toString());
 		this.setVisible(false);
 		frame.toggleGame(true);
-	}
+	}// submit()
 }// HangmanUserNameDropDownPanel class

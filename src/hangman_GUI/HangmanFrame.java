@@ -25,7 +25,15 @@ import javax.swing.JTextPane;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
 
-public class HangmanFrame extends JFrame implements ActionListener, WindowListener{
+/*
+ *       Title: HangmanFrame
+ * Description: Custom JFrame - the main frame of the application
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
+
+public class HangmanFrame extends JFrame implements ActionListener, WindowListener {
 
 	private static final long serialVersionUID = 1L;
 	private HangmanController hangmanController;
@@ -48,10 +56,10 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	private JMenuItem mntmSaveGame;
 	private JMenuItem mntmNewGame;
 	private JMenuItem mntmQuit;
-	
+
 	private HangmanEnterUsernamePanel enterUsernamePanel;
 	private int initializeDictionaryOutput;
-	
+
 	private HangmanDropdownPanel dropDownPanel;
 
 	public HangmanFrame() throws HeadlessException {
@@ -144,25 +152,24 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		btnHint = new JButton("Give Hint");
 		btnHint.setBounds(420, 258, 160, 23);
 		getContentPane().add(btnHint);
-		
+
 		btnHint.addActionListener(this);
-		
+
 		enterUsernamePanel = new HangmanEnterUsernamePanel();
-		enterUsernamePanel.setVisible(false);	
+		enterUsernamePanel.setVisible(false);
 		enterUsernamePanel.setBounds(173, 56, 394, 269);
 		enterUsernamePanel.setFrame(this);
 		getContentPane().add(enterUsernamePanel);
-		
+
 		dropDownPanel = new HangmanDropdownPanel();
 		dropDownPanel.setFrame(this);
 		dropDownPanel.setVisible(false);
 		dropDownPanel.setBounds(184, 56, 384, 269);
 		getContentPane().add(dropDownPanel);
-		
-		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{menuBar, 
-				mnMenu, mntmScoreboard, mntmSaveGame, mntmNewGame, mntmQuit, 
-				txtFldGuess, btnGuess, btnClear, btnHint, btnGuessWholeWord}));
-	}
+
+		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { menuBar, mnMenu, mntmScoreboard,
+				mntmSaveGame, mntmNewGame, mntmQuit, txtFldGuess, btnGuess, btnClear, btnHint, btnGuessWholeWord }));
+	}// HangmanFrame()
 
 	public static void main(String[] args) {
 		HangmanFrame frame = new HangmanFrame();
@@ -171,8 +178,13 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		frame.toggleGame(false);
-		frame.start();	
-		}
+		frame.start();
+	}// main(String[])
+
+	public void initializeWindowActions() {
+		addWindowListener(this);
+		getRootPane().setDefaultButton(btnGuess);
+	}// initializeWindowActions()
 
 	public void toggleGame(boolean show) {
 		hangmanPanel.setVisible(show);
@@ -189,7 +201,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		lblMistakesLeft.setVisible(show);
 		mntmSaveGame.setEnabled(show);
 		mntmNewGame.setEnabled(show);
-	}
+	}// toggleGame(boolean)
 
 	public void start() {
 		hangmanController = new HangmanController();
@@ -205,13 +217,13 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			}
 		} else
 			displayEnterUsername();
-	}
+	}// start()
 
 	public void displayUserDropDown() {
 		String[] usernames = hangmanController.retrieveUserNames();
 		dropDownPanel.setUsernames(usernames);
 		dropDownPanel.setVisible(true);
-	}
+	}// displayUserDropDown()
 
 	public void displayEnterUsername() {
 		if (initializeDictionaryOutput == 1) {
@@ -219,17 +231,16 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		} else
 			JOptionPane.showMessageDialog(this, "Sorry there are no more words left!", "Out of Words To Play",
 					JOptionPane.ERROR_MESSAGE);
-	}
+	}// displayEnterUsername()
 
 	public void startGameAs(String username) {
-		getRootPane().setDefaultButton(btnGuess);
-		addWindowListener(this);
+		initializeWindowActions();
 		hangmanController.findUser(username);
 		if (hangmanController.isSavedGame(username))
 			displayContinueSavedGame();
 		else
 			newGame();
-	}
+	}// startGameAs()
 
 	public void enterUsername(String username) {
 		if (!username.isEmpty()) {
@@ -237,15 +248,14 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 				displayWarning(username);
 			} else {
 				hangmanController.addUser(username);
-				addWindowListener(this);
-				getRootPane().setDefaultButton(btnGuess);
+				initializeWindowActions();
 				newGame();
 			}
 		} else {
 			JOptionPane.showMessageDialog(this, "You must enter a username to submit.", "No Username Entered",
 					JOptionPane.ERROR_MESSAGE);
 		}
-	}
+	}// enterUsername()
 
 	public void displayWarning(String username) {
 		enterUsernamePanel.setVisible(false);
@@ -260,7 +270,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			enterUsernamePanel.setVisible(true);
 		}
 
-	}
+	}// displayWarning(String)
 
 	private void displayContinueSavedGame() {
 		String dialog = "You have a saved game on file.\nDo you want to continue where you left off?";
@@ -276,15 +286,14 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 				enterUsernamePanel.setVisible(false);
 				updateGame();
 			} else {
-				JOptionPane.showMessageDialog(this,
-						"Your saved game is finished! A new game will be started for you.");
+				JOptionPane.showMessageDialog(this, "Your saved game is finished! A new game will be started for you.");
 				newGame();
 			}
 		} else {
 			newGame();
 		}
 
-	}
+	}// displayContinueSavedGame()
 
 	public void displayCheckLetterOutput() {
 		int checkLetterOutput = game.checkLetter(txtFldGuess.getText());
@@ -303,7 +312,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		} else {
 			updateGame();
 		}
-	}
+	}// displayCheckLetterOutput()
 
 	public void toggleGameEnabled(boolean enable) {
 		hangmanPanel.setEnabled(enable);
@@ -313,7 +322,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		btnGuessWholeWord.setEnabled(enable);
 		txtPaneWordDisplay.setEnabled(enable);
 		btnHint.setEnabled(enable);
-	}
+	}// toggleGameEnabled()
 
 	public void gameOver() {
 		int choice = JOptionPane.showConfirmDialog(this, "You made too many mistakes!\nWould you like to play again?",
@@ -324,7 +333,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			updateGame();
 			toggleGameEnabled(false);
 		}
-	}
+	} // gameOver()
 
 	public void gameWon() {
 		// modify user
@@ -337,7 +346,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			toggleGameEnabled(false);
 		}
 
-	}
+	}// gameWon()
 
 	public void newGame() {
 		if (hangmanController.getNewGame()) {
@@ -351,7 +360,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			updateGame();
 			JOptionPane.showMessageDialog(this, "There are no more words left to play!");
 		}
-	}
+	}// newGame()
 
 	public void updateGame() {
 		txtPaneWordDisplay.setText(game.getInterfaceLettersString());
@@ -359,7 +368,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		fldNumMistakes.setText("" + game.getMistakesLeft());
 		hangmanPanel.setMistakes(game.getMistakesLeft());
 		hangmanPanel.repaint();
-	}
+	}// updateGame()
 
 	public void guessWholeWord() {
 		String title = "Guess Whole Word";
@@ -379,8 +388,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 				gameOver();
 			}
 		}
-	}
-	
+	}// guessWholeWord()
+
 	public void displayScoreboard() {
 		HangmanScoreboardFrame scoreboardFrame = new HangmanScoreboardFrame();
 		scoreboardFrame.setVisible(true);
@@ -389,7 +398,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		scoreboardFrame.setVisible(true);
 		scoreboardFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		scoreboardFrame.printScores(hangmanController.getScoreboard().getScoreboard());
-	}
+	}// displayScoreboard()
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -412,20 +421,18 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		} else if (e.getSource() == btnClear) {
 			txtFldGuess.setText("");
 		}
-	}
-	
-	
+	}// actionPerformed()
 
 	@Override
-	public void windowActivated(WindowEvent arg0) {
+	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
 
-	}
+	}// windowActivated(WindowEvent)
 
 	@Override
 	public void windowClosed(WindowEvent e) {
 
-	}
+	}// windowClosed(WindowEvent)
 
 	@Override
 	public void windowClosing(WindowEvent e) {
@@ -434,29 +441,29 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		else
 			System.out.println("Something could not be saved");
 
-	}
+	}// windowClosing(WindowEvent)
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 
-	}
+	}// windowDeactivated(WindowEvent)
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 
-	}
+	}// windowDeiconified(WindowEvent)
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 
-	}
+	}// windowIconified(WindowEvent)
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+		System.out.println("Window opened called");
 
-	}
-}
+	}// windowOpened(WindowEvent)
+}// HangmanFrame class

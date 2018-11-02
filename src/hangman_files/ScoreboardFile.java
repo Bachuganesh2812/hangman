@@ -9,34 +9,43 @@ import java.io.ObjectOutputStream;
 
 import hangman_logic.Scoreboard;
 
+/*
+ *       Title: ScoreboardFile
+ * Description: File Handler for the Scoreboard class
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
+
 public class ScoreboardFile {
-	
+
 	private static final String FILE_NAME = "scoreboard.ser";
-	private Scoreboard scoreboard = new Scoreboard();
-	
-	
+	private Scoreboard scoreboard;
+
+	public ScoreboardFile() {
+		scoreboard = new Scoreboard();
+	}// ScoreboardFile()
+
 	public boolean deserializeScoreboard() {
-		
+
 		boolean scoreboardDeserialized = false;
 		try {
 			FileInputStream inStream = new FileInputStream(FILE_NAME);
 			ObjectInputStream objectInputFile = new ObjectInputStream(inStream);
 			scoreboard = (Scoreboard) objectInputFile.readObject();
 			scoreboardDeserialized = true;
-			
+
 			objectInputFile.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			System.out.println("File not found");
 		} catch (IOException e) {
 			System.out.println("IOException");
 		} catch (ClassNotFoundException e) {
 			System.out.println("Class not found");
 		}
-		
-		
+
 		return scoreboardDeserialized;
-	}
+	}// deserializeScoreboard()
 
 	public boolean saveScoreboard(Scoreboard scoreboard) {
 
@@ -47,7 +56,7 @@ public class ScoreboardFile {
 			ObjectOutputStream outputFile = new ObjectOutputStream(outStream);
 			outputFile.writeObject(scoreboard);
 			scoreboardSerialized = true;
-			
+
 			System.out.println("Scoreboard serialized");
 			outputFile.close();
 		} catch (FileNotFoundException e) {
@@ -57,9 +66,9 @@ public class ScoreboardFile {
 		}
 
 		return scoreboardSerialized;
-	}
-	
+	}// saveScoreboard(Scoreboard)
+
 	public Scoreboard getScoreboard() {
 		return this.scoreboard;
-	}
-}
+	}// getScoreboard()
+}// ScoreboardFile class

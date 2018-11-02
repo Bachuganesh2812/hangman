@@ -2,9 +2,6 @@ package hangman_GUI;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-
-import hangman_logic.Scoreboard;
 import hangman_logic.User;
 import linked_data_structures.DoublyLinkedList;
 
@@ -12,8 +9,17 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JScrollPane;
 
+/*
+ *       Title: HangmanFrame
+ * Description: Custom JFrame - displays the scoreboard when the 
+ * 				player chooses to see it
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
 public class HangmanScoreboardFrame extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JTextArea txtAreaScoreboard;
 	
 	public HangmanScoreboardFrame() {
@@ -48,5 +54,5 @@ public class HangmanScoreboardFrame extends JFrame {
 					scoreboard.getElementAt(i).getTotalWins()));
 			txtAreaScoreboard.append("\n");
 		}
-	}
+	}//displayScoreboard(DoublyLinkedList<User>)
 }// HangmanScoreboardPanel class
