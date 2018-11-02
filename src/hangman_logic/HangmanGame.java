@@ -150,7 +150,7 @@ public class HangmanGame implements Serializable {
 				return -10;
 			} else if(checkForWin()) {
 				gameDone = true;
-				user.setTotalWins(user.getTotalWins() + 1);
+				user.incrementTotalWins();
 				return 10;
 			}
 			return 1;
@@ -205,7 +205,7 @@ public class HangmanGame implements Serializable {
 			return -1;
 		} else if (checkForMatchingWord(word)){
 			unmaskWholeWord();
-			user.setTotalWins(user.getTotalWins() + 1);
+			user.incrementTotalWins();
 			gameDone = true;
 			return 10;
 		} else if(checkForLose()){
@@ -252,7 +252,7 @@ public class HangmanGame implements Serializable {
 			if(interfaceLetters[i] != answerLetters.getElementAt(i)) {
 				checkForMatchingLetter(answerLetters.getElementAt(i));
 				if(checkForWin()) {
-					user.setTotalWins(user.getTotalWins() + 1);
+					user.incrementTotalWins();
 					gameDone = true;
 					return 10;
 				}

@@ -384,14 +384,16 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	}// guessWholeWord()
 
 	public void displayScoreboard() {
+		
 		HangmanScoreboardFrame scoreboardFrame = new HangmanScoreboardFrame();
 		scoreboardFrame.setVisible(true);
 		scoreboardFrame.setSize(630, 370);
 		scoreboardFrame.setLocationRelativeTo(null);
 		scoreboardFrame.setVisible(true);
 		scoreboardFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		scoreboardFrame.printScores(hangmanController.getScoreboard().getScoreboard());
+		scoreboardFrame.printScores(hangmanController.getScoreboard());
 	}// displayScoreboard()
+	
 	
 	public void getHint() {
 		if (game.giveHint() == 10)

@@ -94,7 +94,7 @@ public class HangmanController {
 				return false;
 			} else {
 				this.game = new HangmanGame(word, currPlayer);
-				currPlayer.setTotalGames(currPlayer.getTotalGames() + 1);
+				currPlayer.incrementTotalGames();
 				game.initializeAnswer();
 				return true;
 			}

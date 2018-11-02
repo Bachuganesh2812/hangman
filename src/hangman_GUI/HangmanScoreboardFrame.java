@@ -2,6 +2,8 @@ package hangman_GUI;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+
+import hangman_logic.Scoreboard;
 import hangman_logic.User;
 import linked_data_structures.DoublyLinkedList;
 
@@ -35,7 +37,7 @@ public class HangmanScoreboardFrame extends JFrame {
 		txtAreaScoreboard.setFont(new Font("Monospaced", Font.PLAIN, 12));
 	}//HangmanScoreboardPanel()
 
-	public void printScores(DoublyLinkedList<User> scoreboard) {
+	public void printScores(Scoreboard scoreboard) {
 		displayColumnHeadings();
 		displayScoreboard(scoreboard);
 	}//retrieveScores()
@@ -48,11 +50,15 @@ public class HangmanScoreboardFrame extends JFrame {
 		txtAreaScoreboard.append(String.format("%s\n", underline.toString()));
 	}// displayColumnHeading()
 	
-	private void displayScoreboard(DoublyLinkedList<User> scoreboard) {
-		for(int i = 0; i < scoreboard.getLength(); i++) {
-			txtAreaScoreboard.append(String.format("%-40s%-15d%-15d\n", scoreboard.getElementAt(i).getUsername(), scoreboard.getElementAt(i).getTotalGames(),
-					scoreboard.getElementAt(i).getTotalWins()));
+	private void displayScoreboard(Scoreboard scoreboard) {
+		User user = scoreboard.nextUser();
+		while(user != null) {
+			txtAreaScoreboard.append(String.format("%-40s%-15d%-15d\n", user.getUsername(), user.getTotalGames(),
+					user.getTotalWins()));
 			txtAreaScoreboard.append("\n");
+			user = scoreboard.nextUser();
 		}
+		
+		scoreboard.setCurrPlayer(0);
 	}//displayScoreboard(DoublyLinkedList<User>)
 }// HangmanScoreboardPanel class

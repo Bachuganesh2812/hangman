@@ -18,18 +18,21 @@ public class Scoreboard implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private DoublyLinkedList<User> scoreboard;
+	private int currPlayer;
 
 	public Scoreboard() {
 		scoreboard = new DoublyLinkedList<User>();
+		currPlayer = 0;
 	}//Scoreboard()
 	
 	public DoublyLinkedList<User> getScoreboard() {
 		return scoreboard;
 	}//getScoreboard()
 
-	public void setScoreboard(DoublyLinkedList<User> scoreboard) {
-		this.scoreboard = scoreboard;
-	}//setScoreboard()
+	
+	public void setCurrPlayer(int currPlayer) {
+		this.currPlayer = currPlayer;
+	}
 
 	public boolean retrieveScoreboard() {
 		ScoreboardFile scoreboardFile = new ScoreboardFile();
@@ -70,6 +73,18 @@ public class Scoreboard implements Serializable {
 		}
 	}// addUser();
 	
+	public User nextUser() {
+		User user;
+		if(scoreboard.getLength() == 0) {
+			user = null;
+		} else if(currPlayer == scoreboard.getLength()) {
+			user = null;
+		} else {
+			user = scoreboard.getElementAt(currPlayer++);	
+		}	
+		return user;
+	}// nextUser()
+	
 	private void findSpot(User user) {
 		int index = 0;
 		boolean foundSpot = false;
@@ -103,7 +118,8 @@ public class Scoreboard implements Serializable {
 		boolean userExists = false;
 
 		for (int i = 0; i < scoreboard.getLength(); i++) {
-			scoreboard.getElementAt(i).equals(user);
+			if(scoreboard.getElementAt(i).equals(user))
+				userExists = true;
 		}
 
 		return userExists;

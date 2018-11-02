@@ -19,7 +19,7 @@ public class User implements Serializable{
 
 
 	public User() {
-		this.username = null;
+		this.username = "unknown";
 		this.totalWins = 0;
 		this.totalGames = 0;
 	}//User()
@@ -29,12 +29,6 @@ public class User implements Serializable{
 		this.totalWins = 0;
 		this.totalGames = 0;
 	}//User(String)
-	
-	public User(String uName, int wins, int games, boolean inProg) {
-		this.username = uName;
-		this.totalWins = wins;
-		this.totalGames = games;
-	}//User(String, int, int, boolean)
 	
 	public String getUsername() {
 		return username;
@@ -59,6 +53,14 @@ public class User implements Serializable{
 	public void setTotalGames(int totalGames) {
 		this.totalGames = totalGames;
 	}//setTotalGames(int)
+	
+	public void incrementTotalGames() {
+		totalGames++;
+	}// incrementTotalGames()
+	
+	public void incrementTotalWins() {
+		totalWins++;
+	}// incrementTotalWins()
 
 	@Override 
 	public boolean equals(Object o) {
