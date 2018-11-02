@@ -37,23 +37,23 @@ public class User implements Serializable{
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
+	}//setUsername(String)
 
 	public int getTotalWins() {
 		return totalWins;
-	}
+	}//getTotalWins()
 
 	public void setTotalWins(int totalWins) {
 		this.totalWins = totalWins;
-	}
+	}//setTotalWins(int)
 
 	public int getTotalGames() {
 		return totalGames;
-	}
+	}//getTotalGames()
 
 	public void setTotalGames(int totalGames) {
 		this.totalGames = totalGames;
-	}
+	}//setTotalGames(int)
 
 	@Override 
 	public boolean equals(Object o) {
@@ -63,11 +63,11 @@ public class User implements Serializable{
 			}
 		}
 		return false;
-	}
+	}// equals(Object)
 	
 	@Override
 	public String toString() {
 		return this.getUsername() + " has played a total of "+ this.totalGames + " games and has won " + this.totalWins;	
-	}
+	}// toString()
 
 }

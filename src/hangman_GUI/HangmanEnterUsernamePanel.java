@@ -49,7 +49,7 @@ public class HangmanEnterUsernamePanel extends JPanel implements ActionListener{
 		lblEnterUsernameCancel.setBounds(0, 166, 370, 23);
 		add(lblEnterUsernameCancel);
 		
-		
+
 	}
 	
 	public void setFrame(HangmanFrame frame) {

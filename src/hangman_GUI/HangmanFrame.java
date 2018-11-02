@@ -22,8 +22,10 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
 
-public class HangmanFrame extends JFrame implements ActionListener, WindowListener {
+public class HangmanFrame extends JFrame implements ActionListener, WindowListener{
 
 	private static final long serialVersionUID = 1L;
 	private HangmanController hangmanController;
@@ -151,11 +153,15 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		enterUsernamePanel.setFrame(this);
 		getContentPane().add(enterUsernamePanel);
 		
-		dropDownPanel = new HangmanDropdownPanel(this);
+		dropDownPanel = new HangmanDropdownPanel();
+		dropDownPanel.setFrame(this);
 		dropDownPanel.setVisible(false);
 		dropDownPanel.setBounds(184, 56, 384, 269);
 		getContentPane().add(dropDownPanel);
 		
+		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{menuBar, 
+				mnMenu, mntmScoreboard, mntmSaveGame, mntmNewGame, mntmQuit, 
+				txtFldGuess, btnGuess, btnClear, btnHint, btnGuessWholeWord}));
 	}
 
 	public static void main(String[] args) {
@@ -165,8 +171,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		frame.toggleGame(false);
-		frame.start();
-	}
+		frame.start();	
+		}
 
 	public void toggleGame(boolean show) {
 		hangmanPanel.setVisible(show);
@@ -199,27 +205,12 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			}
 		} else
 			displayEnterUsername();
-
-		// if (initializeDictionaryOutput == -1) {
-		// JOptionPane.showMessageDialog(this, "Sorry the game cannot be played at this
-		// time!", "Broken Hangman",
-		// JOptionPane.ERROR_MESSAGE);
-		// } else {
-		// /// no words but saved game in progress?!?!?
-		// JOptionPane.showMessageDialog(this, "Sorry there are no more words left!",
-		// "Out of Words To Play",
-		// JOptionPane.ERROR_MESSAGE);
-		// }
-
 	}
 
 	public void displayUserDropDown() {
 		String[] usernames = hangmanController.retrieveUserNames();
 		dropDownPanel.setUsernames(usernames);
 		dropDownPanel.setVisible(true);
-
-//		String choice = (String) JOptionPane.showInputDialog(this, dialog, title, JOptionPane.PLAIN_MESSAGE, null,
-//				usernames, "  ");
 	}
 
 	public void displayEnterUsername() {
@@ -231,6 +222,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	}
 
 	public void startGameAs(String username) {
+		getRootPane().setDefaultButton(btnGuess);
 		addWindowListener(this);
 		hangmanController.findUser(username);
 		if (hangmanController.isSavedGame(username))
@@ -246,6 +238,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			} else {
 				hangmanController.addUser(username);
 				addWindowListener(this);
+				getRootPane().setDefaultButton(btnGuess);
 				newGame();
 			}
 		} else {
@@ -364,6 +357,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		txtPaneWordDisplay.setText(game.getInterfaceLettersString());
 		txtPaneGuessedLetters.setText(game.getGuessedLettersString());
 		fldNumMistakes.setText("" + game.getMistakesLeft());
+		hangmanPanel.setMistakes(game.getMistakesLeft());
+		hangmanPanel.repaint();
 	}
 
 	public void guessWholeWord() {
@@ -375,8 +370,10 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			if (output == 10) {
 				gameWon();
 			} else if (output == -1) {
+				updateGame();
 				JOptionPane.showMessageDialog(this, "Your entered word did not match!");
 			} else if (output == -2) {
+				updateGame();
 				JOptionPane.showMessageDialog(this, "That was an invalid entry.");
 			} else {
 				gameOver();
@@ -412,6 +409,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			newGame();
 		} else if (e.getSource() == mntmScoreboard) {
 			displayScoreboard();
+		} else if (e.getSource() == btnClear) {
+			txtFldGuess.setText("");
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package hangman_logic;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import hangman_files.GameFile;
 import linked_data_structures.SinglyLinkedList;
@@ -24,76 +25,77 @@ public class HangmanGame implements Serializable {
 		this.mistakesLeft = 6;
 		this.interfaceLetters = null;
 		this.user = new User();
-	}
+	}// HangmanGame()
 	
 	public HangmanGame(User user) {
 		this.answer = null;
 		this.mistakesLeft = 6;
 		this.interfaceLetters = null;
 		this.user = user;
-	}
+	}// HangmanGame(User)
 
 	public HangmanGame(String ans, User user) {
 		this.answer = ans;
 		this.mistakesLeft = 6;
 		this.interfaceLetters = null;
 		this.user = user;
-	}
+	}//HangmanGame(String, User)
 
 	public boolean isGameDone() {
 		return gameDone;
-	}
+	}//isGameDone()
 
 	public void setGameDone(boolean gameDone) {
 		this.gameDone = gameDone;
-	}
+	}//setGameDone(boolean)
 	
 	public User getUser() {
 		return user;
-	}
+	}// getUser()
 
 	public void setUser(User user) {
 		this.user = user;
-	}
+	}// setUser(User)
+	
 	public SinglyLinkedList<Character> getAnswerLetters() {
 		return answerLetters;
-	}
+	}//getAnswerLetters()
 
 	public void setAnswerLetters(SinglyLinkedList<Character> answer) {
 		this.answerLetters = answer;
-	}
+	}//setAnswerLetters(SinglyLinkedList<Character>)
 
 	public char[] getInterfaceLetters() {
 		return interfaceLetters;
-	}
+	}//getInterfaceLetters()
 
 	public void setInterfaceLetters(char[] interfaceLetters) {
 		this.interfaceLetters = interfaceLetters;
-	}
+	}//setInterfaceLetters(char[])
 
 	public int getMistakesLeft() {
 		return mistakesLeft;
-	}
+	}//getMistakesLeft()
 
 	public void setMistakesLeft(int mistakesLeft) {
 		this.mistakesLeft = mistakesLeft;
-	}
+	}//setMistakesLeft(int)
 
 	public SinglyLinkedList<Character> getGuessedLetters() {
 		return guessedLetters;
-	}
+	}//getGuessedLetters()
 
 	public void setGuessedLetters(SinglyLinkedList<Character> guessedLetters) {
 		this.guessedLetters = guessedLetters;
-	}
+	}//getGuessedLetters(SinglyLinkedList<Character>)
 
 	public String getAnswer() {
 		return answer;
-	}
+	}//getAnswer()
 
 	public void setAnswer(String answer) {
 		this.answer = answer;
-	}
+	}//setAnswer(String)
 	
 	public String getInterfaceLettersString() {
 		String interfaceLettersStr = "";
@@ -103,7 +105,7 @@ public class HangmanGame implements Serializable {
 		}
 		
 		return interfaceLettersStr;
-	}
+	}//getInterfaceLettersString()
 
 	public void initializeAnswer() {
 		interfaceLetters = new char[answer.length()];
@@ -122,7 +124,7 @@ public class HangmanGame implements Serializable {
 
 		System.out.println();
 
-	}
+	}//initializeAnswer()
 
 	public int checkLetter(String letter) {
 		if (validateLetter(letter)) {
@@ -151,11 +153,11 @@ public class HangmanGame implements Serializable {
 		} else {
 			return -1;
 		}
-	}
+	}// checkLetter(String)
 
 	private boolean checkForLose() {
 		return (mistakesLeft == 0);
-	}
+	}//checkForLose()
 	
 	private boolean checkForWin() {
 		boolean isEqual = true;
@@ -166,20 +168,19 @@ public class HangmanGame implements Serializable {
 		}
 		
 		return isEqual;
-	}
+	}//checkForWin()
 
 	private boolean checkForMatchingLetter(char letter) {
 		boolean foundMatch = false;
 		for (int i = 0; i < answerLetters.getLength(); i++) {
 			if (Character.toLowerCase(letter) == Character.toLowerCase(answerLetters.getElementAt(i))) {
-				System.out.println(letter);
 				interfaceLetters[i] = answerLetters.getElementAt(i);
 				foundMatch = true;
 			}
 		}
 
 		return foundMatch;
-	}
+	}//checkForMatchingLetter(char)
 
 	private boolean validateLetter(String letter) {
 		if (letter.length() == 0)
@@ -190,7 +191,7 @@ public class HangmanGame implements Serializable {
 			return false;
 
 		return true;
-	}
+	}//validateLetter(String)
 
 	public int checkWord(String word) {
 		if (word.length() == 0) {
@@ -198,38 +199,35 @@ public class HangmanGame implements Serializable {
 		} else if (word.length() != answerLetters.getLength()) {
 			mistakesLeft -= 1;
 			return -1;
+		} else if (checkForMatchingWord(word)){
+			unmaskWholeWord();
+			user.setTotalWins(user.getTotalWins() + 1);
+			gameDone = true;
+			return 10;
+		} else if(checkForLose()){
+			unmaskWholeWord();
+			return -10;
 		} else {
-			for (int i = 0; i < answerLetters.getLength(); i++) {
-				if (word.charAt(i) != answerLetters.getElementAt(i)) {
-					mistakesLeft -= 1;
-					if (checkForLose()) {
-						unmaskWholeWord();
-						return -10;
-					}
-					return -1;
-				}
-			}
-			return 1;
+			mistakesLeft -= 1;
+			return -1;
 		}
-	}
-
-	public boolean validateWord(String word) {
-		if (word.length() != 0)
-			return false;
-		else if (word.length() != answerLetters.getLength())
-			return false;
-
-		return true;
-	}
-
-	public int checkGameDone() {
-		return 0;
-	}// checkGameDone()
+			
+	}//checkWord(String)
+	
+	private boolean checkForMatchingWord(String word) {
+		boolean matching = true;
+		for (int i = 0; i < answerLetters.getLength(); i++) {
+			if (Character.toLowerCase(word.charAt(i)) != Character.toLowerCase(answerLetters.getElementAt(i))) {
+				matching = false;
+			}
+		}
+		return matching;
+	}// checkForMatchingWord(String)
 
 	public boolean saveGame() {
 		GameFile file = new GameFile();
 		return (file.saveGame(this));
-	}
+	}//saveGame()
 	
 	public HangmanGame retrieveSavedGame() {
 		GameFile file = new GameFile();
@@ -237,20 +235,14 @@ public class HangmanGame implements Serializable {
 			return file.getGame();
 		else
 			return null;
-	}
+	}//retrieveSavedGame()
 	
 	public boolean isSavedGame(String username) {
 		GameFile file = new GameFile();
 		User tempUser = new User(username);
 		return (file.deserializeGame() && file.getGame().getUser().equals(tempUser));
-	}
-
-	public boolean startGame() {
-		return false;
-	}
+	}//isSavedGame(String)	
 	
-	
-
 	public int giveHint() {
 		for (int i = 0; i < answerLetters.getLength(); i++) {
 			if(interfaceLetters[i] != answerLetters.getElementAt(i)) {
@@ -264,13 +256,15 @@ public class HangmanGame implements Serializable {
 			}
 		}
 		return -1;
-	}
+	}//giveHint()
 
 	private void unmaskWholeWord() {
 		for (int i = 0; i < answerLetters.getLength(); i++) {
 			interfaceLetters[i] = answerLetters.getElementAt(i);
 		}
-	}
+		
+		System.out.println(Arrays.toString(interfaceLetters));
+	}//unmaskWholeWord()
 	
 	public String getGuessedLettersString() {
 		String guessedLettersString = "";
@@ -280,12 +274,5 @@ public class HangmanGame implements Serializable {
 		}
 
 		return guessedLettersString;
-	}
-
-	@Override
-	public String toString() {
-		return null;
-	}
-	
-
+	}//getGuessedLettersString()
 }

@@ -8,6 +8,11 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
 
 public class HangmanDropdownPanel extends JPanel implements ActionListener{
 
@@ -18,10 +23,6 @@ public class HangmanDropdownPanel extends JPanel implements ActionListener{
 	private HangmanFrame frame;
 	
 	public HangmanDropdownPanel() {
-		
-	}
-	
-	public HangmanDropdownPanel(HangmanFrame mainFrame) {
 		setLayout(null);
 
 		cmBxUsernames = new JComboBox<String>();
@@ -49,9 +50,12 @@ public class HangmanDropdownPanel extends JPanel implements ActionListener{
 		lblNoUsername.setBounds(36, 171, 240, 27);
 		add(lblNoUsername);
 		
-		frame = mainFrame;
 	}// HangmanUserNameDropDownPanel()
 
+	public void setFrame(HangmanFrame frame) {
+		this.frame = frame;
+	}
+	
 	public String getUserName() {
 		return null;
 	}// getUserName()
@@ -65,14 +69,17 @@ public class HangmanDropdownPanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnSubmit) {
-			frame.startGameAs(cmBxUsernames.getSelectedItem().toString());
-			this.setVisible(false);
-			frame.toggleGame(true);
+			submit();
 		} else if(e.getSource() == btnCancel) {
 			this.setVisible(false);
 			frame.displayEnterUsername();
-		}
-		
-	}
+		}	
+	}//actionPerformed(ActionEvent)
 
+
+	public void submit() {
+		frame.startGameAs(cmBxUsernames.getSelectedItem().toString());
+		this.setVisible(false);
+		frame.toggleGame(true);
+	}
 }// HangmanUserNameDropDownPanel class
