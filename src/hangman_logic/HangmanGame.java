@@ -6,11 +6,16 @@ import java.util.Arrays;
 import hangman_files.GameFile;
 import linked_data_structures.SinglyLinkedList;
 
+/*
+ *       Title: HangmanGame
+ * Description: The logic for the hangman game
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
+
 public class HangmanGame implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private SinglyLinkedList<Character> answerLetters = new SinglyLinkedList<Character>();
 	private SinglyLinkedList<Character> guessedLetters = new SinglyLinkedList<Character>();
@@ -134,7 +139,8 @@ public class HangmanGame implements Serializable {
 					return -2;
 			}
 
-			if (!checkForMatchingLetter(let)) {
+			if (!checkForMatchingLetter(let)) { 			
+				guessedLetters.add(let);
 				mistakesLeft -= 1;
 			}
 
@@ -147,8 +153,6 @@ public class HangmanGame implements Serializable {
 				user.setTotalWins(user.getTotalWins() + 1);
 				return 10;
 			}
-
-			guessedLetters.add(let);
 			return 1;
 		} else {
 			return -1;
@@ -275,4 +279,4 @@ public class HangmanGame implements Serializable {
 
 		return guessedLettersString;
 	}//getGuessedLettersString()
-}
+}// HangmanGame class

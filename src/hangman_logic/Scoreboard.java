@@ -5,11 +5,17 @@ import java.io.Serializable;
 import hangman_files.ScoreboardFile;
 import linked_data_structures.DoublyLinkedList;
 
+/*
+ *       Title: Scoreboard
+ * Description: Holds the users of the application, handles the addition of users 
+ * 				to the application as well as sorting
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
+
 public class Scoreboard implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private DoublyLinkedList<User> scoreboard;
 

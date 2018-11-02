@@ -31,6 +31,7 @@ import java.awt.Component;
  *     Teacher: Sandra Stark
  *     Program: 420-B30 Programming III
  *      Author: Marissa Cleroux 
+ *   Reference: https://stackoverflow.com/questions/1234912/how-to-programmatically-close-a-jframe (How To Close a JFrame)
  */
 
 public class HangmanFrame extends JFrame implements ActionListener, WindowListener {
@@ -56,10 +57,11 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	private JMenuItem mntmSaveGame;
 	private JMenuItem mntmNewGame;
 	private JMenuItem mntmQuit;
+	private JMenuItem mntmHint;
 
 	private HangmanEnterUsernamePanel enterUsernamePanel;
 	private int initializeDictionaryOutput;
-
+	private boolean gameInProgress = false;
 	private HangmanDropdownPanel dropDownPanel;
 
 	public HangmanFrame() throws HeadlessException {
@@ -82,6 +84,10 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		mntmNewGame = new JMenuItem("New Game");
 		mntmNewGame.addActionListener(this);
 		mnMenu.add(mntmNewGame);
+		
+		mntmHint = new JMenuItem("Give Hint");
+		mntmHint.addActionListener(this);
+		mnMenu.add(mntmHint);
 
 		mntmQuit = new JMenuItem("Quit");
 		mntmQuit.addActionListener(this);
@@ -169,6 +175,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { menuBar, mnMenu, mntmScoreboard,
 				mntmSaveGame, mntmNewGame, mntmQuit, txtFldGuess, btnGuess, btnClear, btnHint, btnGuessWholeWord }));
+		
+		addWindowListener(this);
 	}// HangmanFrame()
 
 	public static void main(String[] args) {
@@ -178,11 +186,10 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		frame.toggleGame(false);
-		frame.start();
 	}// main(String[])
 
 	public void initializeWindowActions() {
-		addWindowListener(this);
+		gameInProgress = true;
 		getRootPane().setDefaultButton(btnGuess);
 	}// initializeWindowActions()
 
@@ -201,26 +208,12 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		lblMistakesLeft.setVisible(show);
 		mntmSaveGame.setEnabled(show);
 		mntmNewGame.setEnabled(show);
+		mntmHint.setEnabled(show);
 	}// toggleGame(boolean)
 
-	public void start() {
-		hangmanController = new HangmanController();
-		initializeDictionaryOutput = hangmanController.initializeDictionary();
-
-		if (hangmanController.isScoreboard()) {
-			int choice = JOptionPane.showConfirmDialog(this, "Have you played Hangman before?", "Start",
-					JOptionPane.YES_NO_OPTION);
-			if (choice == 0) {
-				displayUserDropDown();
-			} else {
-				displayEnterUsername();
-			}
-		} else
-			displayEnterUsername();
-	}// start()
 
 	public void displayUserDropDown() {
-		String[] usernames = hangmanController.retrieveUserNames();
+		String[] usernames = hangmanController.getScoreboard().retrieveUserNames();
 		dropDownPanel.setUsernames(usernames);
 		dropDownPanel.setVisible(true);
 	}// displayUserDropDown()
@@ -236,7 +229,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	public void startGameAs(String username) {
 		initializeWindowActions();
 		hangmanController.findUser(username);
-		if (hangmanController.isSavedGame(username))
+		if (hangmanController.getGame().isSavedGame(username))
 			displayContinueSavedGame();
 		else
 			newGame();
@@ -399,6 +392,13 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		scoreboardFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		scoreboardFrame.printScores(hangmanController.getScoreboard().getScoreboard());
 	}// displayScoreboard()
+	
+	public void getHint() {
+		if (game.giveHint() == 10)
+			gameWon();
+		else
+			updateGame();
+	}// getHint()
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -406,10 +406,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			displayCheckLetterOutput();
 			txtFldGuess.setText("");
 		} else if (e.getSource() == btnHint) {
-			if (game.giveHint() == 10)
-				gameWon();
-			else
-				updateGame();
+			getHint();
 		} else if (e.getSource() == btnGuessWholeWord) {
 			guessWholeWord();
 		} else if (e.getSource() == mntmSaveGame) {
@@ -420,12 +417,17 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 			displayScoreboard();
 		} else if (e.getSource() == btnClear) {
 			txtFldGuess.setText("");
+		} else if (e.getSource() == mntmHint) {
+			getHint();
+		} else if (e.getSource() == mntmQuit) {
+			//(How to close a JFrame)
+			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
 	}// actionPerformed()
 
 	@Override
 	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}// windowActivated(WindowEvent)
 
@@ -436,34 +438,44 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		if (hangmanController.saveGame(game))
-			System.out.println("Everything was saved");
-		else
-			System.out.println("Something could not be saved");
+		if (gameInProgress) {
+			hangmanController.saveGame(game);
+			System.out.println("Game saved");
+		}
 
 	}// windowClosing(WindowEvent)
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+		
 
 	}// windowDeactivated(WindowEvent)
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-
+		
 	}// windowDeiconified(WindowEvent)
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}// windowIconified(WindowEvent)
 
 	@Override
-	public void windowOpened(WindowEvent arg0) {
-		System.out.println("Window opened called");
+	public void windowOpened(WindowEvent e) {
+		hangmanController = new HangmanController();
+		initializeDictionaryOutput = hangmanController.initializeDictionary();
+
+		if (hangmanController.getScoreboard().retrieveScoreboard()) {
+			int choice = JOptionPane.showConfirmDialog(this, "Have you played Hangman before?", "Start",
+					JOptionPane.YES_NO_OPTION);
+			if (choice == 0) {
+				displayUserDropDown();
+			} else {
+				displayEnterUsername();
+			}
+		} else
+			displayEnterUsername();
 
 	}// windowOpened(WindowEvent)
 }// HangmanFrame class

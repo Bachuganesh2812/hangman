@@ -1,30 +1,34 @@
 package hangman_logic;
 
 import java.io.Serializable;
-
 import hangman_files.DictionaryFile;
 import linked_data_structures.SinglyLinkedList;
 
+/*
+ *       Title: Dictionary
+ * Description: Class that holds the list of available words to play
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
+
 public class Dictionary implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private SinglyLinkedList<String> dictionary;
 	private transient DictionaryFile file;
 	
 	public Dictionary() {
 		dictionary = null;
-	}
+	}// Dictionary()
 	
 	public SinglyLinkedList<String> getDictionary() {
 		return dictionary;
-	}
+	}// getDictionary()
 	
 	public void setDictionary(SinglyLinkedList<String> dictionary) {
 		this.dictionary = dictionary;
-	}
+	}//setDictionary(SinglyLinkedList<String>)
 	
 	public boolean initializeDictionary() {
 		boolean dictionaryInitialized = false;	
@@ -32,17 +36,15 @@ public class Dictionary implements Serializable{
 		if(file.readDictionary()) {
 			dictionary = file.getDictionary().getDictionary();
 			dictionaryInitialized = true;
-		} else {
-			System.out.println("Something went wrong with the dictionary file.");
 		}
+		
 		return dictionaryInitialized;
-	}
+	}//initializeDictionary()
 
 	public boolean saveDictionary() {
 		return file.saveDictionary(this);
-	}
+	}//saveDictionary()
 
-	// what happens at last word?
 	public String getRandomWord() {
 		String word = null;
 		if(dictionary.getLength() >= 1) {
@@ -54,7 +56,7 @@ public class Dictionary implements Serializable{
 		}
 		
 		return word;
-	}
+	}//getRandomWord()
 	
 	public String toString() {
 		String dictionaryString = "";
@@ -65,6 +67,6 @@ public class Dictionary implements Serializable{
 		}
 		
 		return dictionaryString;
-	}
+	}//toString()
 	
-}
+}// Dictionary class

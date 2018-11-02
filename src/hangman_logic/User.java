@@ -2,11 +2,16 @@ package hangman_logic;
 
 import java.io.Serializable;
 
+/*
+ *       Title: User
+ * Description: Holds the characteristics and operations for each user
+ *     Teacher: Sandra Stark
+ *     Program: 420-B30 Programming III
+ *      Author: Marissa Cleroux 
+ */
+
 public class User implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String username;
 	private int totalWins;
@@ -70,4 +75,4 @@ public class User implements Serializable{
 		return this.getUsername() + " has played a total of "+ this.totalGames + " games and has won " + this.totalWins;	
 	}// toString()
 
-}
+}//User class
