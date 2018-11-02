@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
+import javax.swing.border.LineBorder;
 
 /*
  *       Title: HangmanPanel
@@ -20,6 +22,8 @@ public class HangmanPanel extends JPanel {
 	private int mistakes;
 
 	public HangmanPanel() {
+		setBorder(new LineBorder(new Color(0, 0, 128), 2));
+		setBackground(new Color(255, 255, 255));
 		setLayout(null);
 		mistakes = 6;
 		addMouseListener(new MouseAdapter() {
@@ -39,6 +43,7 @@ public class HangmanPanel extends JPanel {
 		g.drawLine(24, 258, 24, 22);
 		g.drawLine(24, 22, 128, 22);
 		g.drawLine(128, 22, 128, 50);
+		g.drawLine(10, 258, 40, 258);
 
 		if (mistakes <= 5) {
 			g.drawOval(105, 50, 50, 50);
