@@ -89,7 +89,7 @@ public class HangmanDropdownPanel extends JPanel implements ActionListener {
 		}
 	}// actionPerformed(ActionEvent)
 
-	public void submit() {
+	private void submit() {
 		frame.startGameAs(cmBxUsernames.getSelectedItem().toString());
 		this.setVisible(false);
 		

@@ -1,12 +1,3 @@
-doorbell
-witch
-bats
-costume
-autumn
-skeleton
-sweets
-afraid
-scarecrow
 candy
 Frankenstein
 candy corn
@@ -55,5 +46,11 @@ Ghostbusters
 goblin
 spooky
 lantern
-gypsy
-thriller
+doorbell
+witch
+bats
+costume
+autumn
+skeleton
+sweets
+afraid

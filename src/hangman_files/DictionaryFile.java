@@ -74,7 +74,9 @@ public class DictionaryFile {
 		}
 
 		while (in.hasNext()) {
-			dictionaryList.add(in.nextLine());
+			String word = in.nextLine();
+			if(!word.matches(".*\\d+.*"))
+				dictionaryList.add(word);
 		}
 
 		in.close();
