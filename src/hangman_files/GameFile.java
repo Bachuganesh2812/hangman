@@ -27,7 +27,7 @@ public class GameFile {
 
 	public boolean deserializeGame() {
 
-		boolean gameDeserialized = false;
+		boolean gameDeserialized;
 		try {
 			FileInputStream inStream = new FileInputStream(FILE_NAME);
 			ObjectInputStream objectInputFile = new ObjectInputStream(inStream);
@@ -36,11 +36,11 @@ public class GameFile {
 
 			objectInputFile.close();
 		} catch (FileNotFoundException e) {
-			System.out.println("File not found");
+			gameDeserialized = false;
 		} catch (IOException e) {
-			System.out.println("IOException");
+			gameDeserialized = false;
 		} catch (ClassNotFoundException e) {
-			System.out.println("Class not found");
+			gameDeserialized = false;
 		}
 
 		return gameDeserialized;
@@ -48,20 +48,18 @@ public class GameFile {
 
 	public boolean saveGame(HangmanGame game) {
 
-		boolean gameSerialized = false;
+		boolean gameSerialized;
 
 		try {
 			FileOutputStream outStream = new FileOutputStream(FILE_NAME);
 			ObjectOutputStream outputFile = new ObjectOutputStream(outStream);
 			outputFile.writeObject(game);
 			gameSerialized = true;
-
-			System.out.println("Game saved");
 			outputFile.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			gameSerialized = false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			gameSerialized = false;
 		}
 
 		return gameSerialized;

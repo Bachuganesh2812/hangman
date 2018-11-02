@@ -1,7 +1,6 @@
 package hangman_logic;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 import hangman_files.GameFile;
 import linked_data_structures.SinglyLinkedList;
@@ -122,12 +121,6 @@ public class HangmanGame implements Serializable {
 				interfaceLetters[i] = answer.charAt(i);
 			}
 		}
-
-		for (int i = 0; i < answerLetters.getLength(); i++) {
-			System.out.print(answerLetters.getElementAt(i));
-		}
-
-		System.out.println();
 
 	}//initializeAnswer()
 
@@ -266,8 +259,6 @@ public class HangmanGame implements Serializable {
 		for (int i = 0; i < answerLetters.getLength(); i++) {
 			interfaceLetters[i] = answerLetters.getElementAt(i);
 		}
-		
-		System.out.println(Arrays.toString(interfaceLetters));
 	}//unmaskWholeWord()
 	
 	public String getGuessedLettersString() {

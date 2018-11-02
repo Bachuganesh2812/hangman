@@ -15,7 +15,6 @@ import hangman_logic.HangmanGame;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.SystemColor;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -27,7 +26,6 @@ import java.awt.Component;
 import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 
 /*
  *       Title: HangmanFrame
@@ -68,6 +66,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	private HangmanDropdownPanel dropDownPanel;
 	private JPanel panelGame;
 	private JPanel guessedLettersPanel;
+	private JLabel lblWelcome;
+	private JLabel lblUser;
 
 	public HangmanFrame() throws HeadlessException {
 		setBackground(new Color(0, 0, 128));
@@ -79,28 +79,44 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		setJMenuBar(menuBar);
 
 		JMenu mnMenu = new JMenu("MENU");
+		mnMenu.setBackground(new Color(255, 255, 255));
 		mnMenu.setForeground(new Color(248, 248, 255));
 		mnMenu.setFont(new Font("Calibri Light", Font.PLAIN, 13));
 		menuBar.add(mnMenu);
 
 		mntmScoreboard = new JMenuItem("Scoreboard");
+		mntmScoreboard.setFont(new Font("Calibri", Font.PLAIN, 13));
+		mntmScoreboard.setBackground(new Color(255, 255, 255));
 		mntmScoreboard.addActionListener(this);
 		mnMenu.add(mntmScoreboard);
 
 		mntmSaveGame = new JMenuItem("Save Game");
+		mntmSaveGame.setFont(new Font("Calibri", Font.PLAIN, 13));
+		mntmSaveGame.setBackground(new Color(255, 255, 255));
 		mntmSaveGame.addActionListener(this);
 		mnMenu.add(mntmSaveGame);
 
 		mntmNewGame = new JMenuItem("New Game");
+		mntmNewGame.setFont(new Font("Calibri", Font.PLAIN, 13));
+		mntmNewGame.setBackground(new Color(255, 255, 255));
 		mntmNewGame.addActionListener(this);
 		mnMenu.add(mntmNewGame);
 
 		mntmHint = new JMenuItem("Give Hint");
+		mntmHint.setBackground(new Color(255, 255, 255));
+		mntmHint.setFont(new Font("Calibri", Font.PLAIN, 13));
 		mntmHint.addActionListener(this);
 		mnMenu.add(mntmHint);
 
 		mntmQuit = new JMenuItem("Quit");
+		mntmQuit.setFont(new Font("Calibri", Font.PLAIN, 13));
+		mntmQuit.setBackground(new Color(255, 255, 255));
 		mntmQuit.addActionListener(this);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("Rules");
+		mntmNewMenuItem.setBackground(new Color(255, 255, 255));
+		mntmNewMenuItem.setFont(new Font("Calibri", Font.PLAIN, 13));
+		mnMenu.add(mntmNewMenuItem);
 		mnMenu.add(mntmQuit);
 		getContentPane().setLayout(null);
 
@@ -203,6 +219,16 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		lblGuessedLetters.setFont(new Font("Calibri", Font.PLAIN, 18));
 		lblGuessedLetters.setBounds(10, 11, 136, 23);
 		guessedLettersPanel.add(lblGuessedLetters);
+		
+		lblWelcome = new JLabel("Welcome To Hangman");
+		lblWelcome.setFont(new Font("Calibri", Font.BOLD, 22));
+		lblWelcome.setBounds(31, 11, 211, 34);
+		getContentPane().add(lblWelcome);
+		
+		lblUser = new JLabel("");
+		lblUser.setFont(new Font("Calibri", Font.BOLD, 22));
+		lblUser.setBounds(245, 11, 196, 34);
+		getContentPane().add(lblUser);
 
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { menuBar, mnMenu, mntmScoreboard,
 				mntmSaveGame, mntmNewGame, mntmQuit, txtFldGuess, btnGuess, btnClear, btnHint, btnGuessWholeWord }));
@@ -297,15 +323,20 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	private void displayContinueSavedGame() {
 		String dialog = "You have a saved game on file.\nDo you want to continue where you left off?";
 		String title = "Saved Game Available";
+		int dictionaryExists;
 
 		int choice = JOptionPane.showConfirmDialog(this, dialog, title, JOptionPane.YES_NO_OPTION);
 		if (choice == 0) {
 			if (hangmanController.retrieveSavedGame() && !hangmanController.getGame().isGameDone()) {
 				game = hangmanController.getGame();
-				hangmanController.initializeDictionary();
-				System.out.println("Save game has been retrieved");
-				toggleGame(true);
-				updateGame();
+				dictionaryExists = hangmanController.initializeDictionary();
+				if (dictionaryExists == 1) {
+					toggleGame(true);
+					lblUser.setText(game.getUser().getUsername());
+					updateGame();
+				} else {
+					JOptionPane.showMessageDialog(this, "Sorry something went wrong with the dictionary file.", "Try Again Another Time", JOptionPane.ERROR_MESSAGE);
+				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Your saved game is finished! A new game will be started for you.");
 				newGame();
@@ -372,6 +403,7 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	public void newGame() {
 		if (hangmanController.getNewGame()) {
 			game = hangmanController.getGame();
+			lblUser.setText(game.getUser().getUsername());
 			toggleGame(true);
 			toggleGameEnabled(true);
 			enterUsernamePanel.setVisible(false);
@@ -379,7 +411,8 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 		} else {
 			gameInProgress = false;
 			toggleGame(false);
-			JOptionPane.showMessageDialog(this, "There are no more words left to play!", "Out of Words", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "There are no more words left to play!", "Out of Words",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}// newGame()
 
@@ -468,7 +501,6 @@ public class HangmanFrame extends JFrame implements ActionListener, WindowListen
 	public void windowClosing(WindowEvent e) {
 		if (gameInProgress) {
 			hangmanController.saveGame(game);
-			System.out.println("Game saved");
 		}
 
 	}// windowClosing(WindowEvent)

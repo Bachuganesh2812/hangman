@@ -5,7 +5,6 @@ import javax.swing.JTextArea;
 
 import hangman_logic.Scoreboard;
 import hangman_logic.User;
-import linked_data_structures.DoublyLinkedList;
 
 import java.awt.Color;
 import java.awt.Font;

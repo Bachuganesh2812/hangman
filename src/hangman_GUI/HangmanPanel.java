@@ -2,8 +2,6 @@ package hangman_GUI;
 
 import javax.swing.JPanel;
 import java.awt.Graphics;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 
@@ -26,11 +24,6 @@ public class HangmanPanel extends JPanel {
 		setBackground(new Color(255, 255, 255));
 		setLayout(null);
 		mistakes = 6;
-		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				System.out.println("X: " + e.getX() + " Y:" + e.getY());
-			}
-		});
 	}// HangmanPanel()
 
 	public void setMistakes(int mistakes) {

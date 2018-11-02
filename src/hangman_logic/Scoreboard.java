@@ -145,7 +145,6 @@ public class Scoreboard implements Serializable {
 			users += scoreboard.getElementAt(i).getUsername();
 			users += "\n";
 		}
-
 		return users;
 	}// toString()
 

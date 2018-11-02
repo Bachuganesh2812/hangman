@@ -28,7 +28,7 @@ public class ScoreboardFile {
 
 	public boolean deserializeScoreboard() {
 
-		boolean scoreboardDeserialized = false;
+		boolean scoreboardDeserialized;
 		try {
 			FileInputStream inStream = new FileInputStream(FILE_NAME);
 			ObjectInputStream objectInputFile = new ObjectInputStream(inStream);
@@ -37,11 +37,11 @@ public class ScoreboardFile {
 
 			objectInputFile.close();
 		} catch (FileNotFoundException e) {
-			System.out.println("File not found");
+			 scoreboardDeserialized = false;
 		} catch (IOException e) {
-			System.out.println("IOException");
+			 scoreboardDeserialized = false;
 		} catch (ClassNotFoundException e) {
-			System.out.println("Class not found");
+			 scoreboardDeserialized = false;
 		}
 
 		return scoreboardDeserialized;
@@ -49,20 +49,18 @@ public class ScoreboardFile {
 
 	public boolean saveScoreboard(Scoreboard scoreboard) {
 
-		boolean scoreboardSerialized = false;
+		boolean scoreboardSerialized;
 
 		try {
 			FileOutputStream outStream = new FileOutputStream(FILE_NAME);
 			ObjectOutputStream outputFile = new ObjectOutputStream(outStream);
 			outputFile.writeObject(scoreboard);
 			scoreboardSerialized = true;
-
-			System.out.println("Scoreboard serialized");
 			outputFile.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			scoreboardSerialized = false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			scoreboardSerialized = false;
 		}
 
 		return scoreboardSerialized;

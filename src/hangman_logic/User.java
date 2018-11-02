@@ -55,11 +55,11 @@ public class User implements Serializable{
 	}//setTotalGames(int)
 	
 	public void incrementTotalGames() {
-		totalGames++;
+		this.totalGames++;
 	}// incrementTotalGames()
 	
 	public void incrementTotalWins() {
-		totalWins++;
+		this.totalWins++;
 	}// incrementTotalWins()
 
 	@Override 

@@ -34,11 +34,8 @@ public class DictionaryFile {
 		boolean dictionaryCreated = false;
 
 		if (deserializeDictionary()) {
-			System.out.println("Dictionary deserialized");
 			dictionaryCreated = true;
 		} else if (readDictionaryFile()) {
-
-			System.out.println("Dictionary read from text file");
 			dictionaryCreated = true;
 		}
 
@@ -47,7 +44,7 @@ public class DictionaryFile {
 
 	private boolean deserializeDictionary() {
 
-		boolean dictionaryDeserialized = false;
+		boolean dictionaryDeserialized;
 		try {
 			FileInputStream inStream = new FileInputStream(FILE_NAME_SERIALIZED);
 			ObjectInputStream objectInputFile = new ObjectInputStream(inStream);
@@ -55,11 +52,11 @@ public class DictionaryFile {
 			dictionaryDeserialized = true;
 			objectInputFile.close();
 		} catch (FileNotFoundException e) {
-			System.out.println("File not found");
+			dictionaryDeserialized = false;
 		} catch (IOException e) {
-			System.out.println("File not found");
+			dictionaryDeserialized = false;
 		} catch (ClassNotFoundException e) {
-			System.out.println("Class not found");
+			dictionaryDeserialized = false;
 		}
 
 		return dictionaryDeserialized;
@@ -73,7 +70,6 @@ public class DictionaryFile {
 			in.useDelimiter("\r\n");
 			dictionaryList = new SinglyLinkedList<String>();
 		} catch (FileNotFoundException e) {
-			System.out.println(e.getMessage());
 			return false;
 		}
 
@@ -102,9 +98,9 @@ public class DictionaryFile {
 			dictionarySerialized = true;
 			outputFile.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			dictionarySerialized = false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			dictionarySerialized = false;
 		}
 
 		return dictionarySerialized;

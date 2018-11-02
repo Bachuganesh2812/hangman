@@ -51,10 +51,7 @@ public class Dictionary implements Serializable{
 			int randNum = (int)(Math.random() * dictionary.getLength() - 1);
 			word = dictionary.getElementAt(randNum);
 			dictionary.remove(randNum);
-		}else {
-			System.out.println("There is no more words left");
 		}
-		
 		return word;
 	}//getRandomWord()
 	
