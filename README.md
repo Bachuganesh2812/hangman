@@ -1,4 +1,4 @@
-### Hangman
+# Hangman
 Completed in second year, first semester, Programming III. Hangman with GUI.
 
 #### Assignment 02 - Java
